@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:vitalvet_app/widgets/search_bar.dart';
 
 import '../widgets/pets_list.dart';
 
@@ -9,8 +11,20 @@ class PetsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Mascotas'),
-        Expanded(child: PetsList()),
+        Container(
+          color: Colors.red,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Mascotas'),
+              const SizedBox(
+                width: 300,
+                child: SearchBar(),
+              ),
+            ],
+          ),
+        ),
+        const Expanded(child: PetsList()),
       ],
     );
   }

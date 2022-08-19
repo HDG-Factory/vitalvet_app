@@ -4,10 +4,8 @@ const LOGIN_ROUTE = '/login';
 const HOME_ROUTE = '/home';
 
 const PETS_VIEW_INDEX = 0;
-
-const PETS_VIEW_ROUTE = '/pets';
-const CLINICAL_HISTORIES_ROUTE = '/medical_histories';
-const CALENDAR_ROUTE = '/calendar';
-const PROFILE_ROUTE = '/profile';
-const NOTIFICATIONS_ROUTE = '/notifications';
-const SETTINGS_ROUTE = '/settings';
+const CLINICAL_HISTORIES_VIEW_INDEX = 1;
+const CALENDAR_VIEW_INDEX = 2;
+const PROFILE_VIEW_INDEX = 3;
+const NOTIFICATIONS_INDEX = 4;
+const SETTINGS_VIEW_INDEX = 5;

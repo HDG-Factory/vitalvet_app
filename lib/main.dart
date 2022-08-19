@@ -17,7 +17,7 @@ void main() {
   ));
 
   doWhenWindowReady(() {
-    const minSize = Size(400, 450);
+    const minSize = Size(400, 519);
     appWindow.minSize = minSize;
     appWindow.title = 'Vitalvet';
     appWindow.show();

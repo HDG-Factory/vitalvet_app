@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:vitalvet_app/blocs/side_bar/side_bar_bloc.dart';
-
-import 'icon_bar_btn.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:vitalvet_app/blocs/side_bar/extension/side_bar_extension_bloc.dart';
+import 'package:vitalvet_app/blocs/side_bar/selection/side_bar_selection_bloc.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
@@ -13,24 +13,27 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  bool extended = false;
   bool mouseEntered = true;
+  bool extended = false;
 
   @override
   Widget build(BuildContext context) {
-    final sideBarBloc = context.read<SideBarBloc>();
+    final sideBarSelectionBloc = context.read<SideBarSelectionBloc>();
+    final sideBarExtensionBloc = context.read<SideBarExtensionBloc>();
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: BlocBuilder<SideBarBloc, SideBarState>(
-        builder: (context, state) {
-          state = (state as SideBarSelection);
-
-          return Container(
+      child: BlocBuilder<SideBarExtensionBloc, bool>(
+        builder: (context, bool isExtended) {
+          extended = isExtended;
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
             ),
+            width: !isExtended ? 90 : 235,
             child: MouseRegion(
               onEnter: (event) {
                 setState(() {
@@ -42,31 +45,40 @@ class _SideBarState extends State<SideBar> {
                   mouseEntered = false;
                 });
               },
-              child: NavigationRail(
-                selectedIndex: state.index,
-                onDestinationSelected: (int index) =>
-                    sideBarBloc.add(ChangeSideBarSelectionEvent(index)),
-                extended: extended,
-                labelType: NavigationRailLabelType.none,
-                useIndicator: true,
-                indicatorColor: Colors.white,
-                leading: IconBarBtn(
-                  iconBar: !mouseEntered || extended
-                      ? SvgPicture.asset(
-                          'assets/vitalvet_icon.svg',
-                          width: 30,
-                          height: 30,
-                        )
-                      : const Icon(
-                          Icons.keyboard_double_arrow_right,
-                        ),
-                  onPressed: () {
-                    setState(() {
-                      extended = !extended;
-                    });
-                  },
-                ),
-                destinations: _destinations,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _appIconBtn(sideBarExtensionBloc, extended),
+                  Expanded(
+                    child: BlocBuilder<SideBarSelectionBloc, int>(
+                      builder: (context, int currentIndex) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: _getItems(
+                                  topItems,
+                                  sideBarSelectionBloc,
+                                  0,
+                                  isExtended,
+                                  currentIndex),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: _getItems(
+                                  bottomItems,
+                                  sideBarSelectionBloc,
+                                  3,
+                                  isExtended,
+                                  currentIndex),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -75,32 +87,273 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-  List<NavigationRailDestination> get _destinations {
-    return <NavigationRailDestination>[
-      const NavigationRailDestination(
-        icon: Icon(Icons.cruelty_free),
-        label: Text('Mascotas'),
+  MyNavigationRailFab _appIconBtn(sideBarExtensionBloc, bool extended) {
+    return MyNavigationRailFab(
+      icon: SizedBox(
+        height: 30,
+        child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, anim) =>
+                FadeTransition(opacity: anim, child: child),
+            child: !mouseEntered
+                ? SvgPicture.asset('assets/vitalvet_icon.svg',
+                    height: 30, width: 30)
+                : AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, anim) => RotationTransition(
+                        turns: child.key == const ValueKey('icon2')
+                            ? Tween<double>(begin: 1, end: 0.75).animate(anim)
+                            : Tween<double>(begin: 0.75, end: 1).animate(anim),
+                        child: FadeTransition(opacity: anim, child: child)),
+                    child: !extended
+                        ? const Icon(Icons.keyboard_double_arrow_down,
+                            key: ValueKey('icon2'))
+                        : const Icon(Icons.keyboard_double_arrow_left,
+                            key: ValueKey('icon3')),
+                  )),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.description_outlined),
-        label: Text('Historias clínicas'),
+      text: 'Agregar',
+      index: 500,
+      onPressed: () {
+        sideBarExtensionBloc.add(ChangeSideBarExtensionEvent(!extended));
+      },
+    );
+  }
+
+  List<Widget> _getItems(List<List<Object>> list, sideBarSelectionBloc,
+      int startIndex, bool extended, int currentIndex) {
+    List<MyNavigationRailFab> items = [];
+
+    for (int i = 0; i < list.length; i++) {
+      int index = startIndex;
+      if (currentIndex == 1) {
+        print('hi');
+      }
+      items.add(MyNavigationRailFab(
+        icon: list[i][0] as Widget,
+        text: list[i][1] as String,
+        index: index,
+        extended: extended,
+        selected: currentIndex == index,
+        onPressed: () {
+          setState(() {
+            sideBarSelectionBloc.add(ChangeSideBarSelectionEvent(index));
+          });
+        },
+      ));
+      startIndex++;
+    }
+
+    return items;
+  }
+
+  final topItems = [
+    [
+      const Icon(Icons.cruelty_free),
+      'Mascotas',
+    ],
+    [
+      const Icon(Icons.description_outlined),
+      'Historias clínicas',
+    ],
+    [
+      const Icon(Icons.calendar_month),
+      'Calendario',
+    ],
+  ];
+
+  final bottomItems = [
+    [
+      const Icon(Icons.person_outlined),
+      'Perfil',
+    ],
+    [
+      const Icon(Icons.notifications_outlined),
+      'Notificaciones',
+    ],
+    [
+      const Icon(Icons.settings_outlined),
+      'Configuración',
+    ],
+  ];
+}
+
+class MyNavigationRailFab extends StatelessWidget {
+  final bool? extended;
+  final String? text;
+  final Widget? icon;
+  final VoidCallback? onPressed;
+  final int? index;
+  final bool? selected;
+
+  const MyNavigationRailFab(
+      {super.key,
+      this.text,
+      this.index,
+      this.onPressed,
+      this.icon,
+      this.extended,
+      this.selected});
+
+  @override
+  Widget build(BuildContext context) {
+    Color backgroundColor = Colors.white;
+    Color foregroundColor = const Color.fromARGB(255, 89, 93, 96);
+    Color hoverColor = const Color.fromARGB(255, 246, 250, 254);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+      child: RawMaterialButton(
+        onPressed: onPressed,
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        hoverColor: hoverColor,
+        splashColor: Colors.yellow,
+        fillColor: (selected != null && selected == true) ? Colors.blue : null,
+        focusColor: Colors.red,
+        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: extended == null || extended == false
+            ? Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                  child: icon,
+                ),
+              )
+            : Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                    child: icon!,
+                  ),
+                  Text(
+                    text!,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
+              ),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.calendar_month),
-        label: Text('Calendario'),
-      ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.person_outlined),
-        label: Text('Perfil'),
-      ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.notifications_outlined),
-        label: Text('Notificaciones'),
-      ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.settings_outlined),
-        label: Text('Configuración'),
-      ),
-    ];
+    );
+    // };
+    // );
   }
 }
+
+
+
+
+// ---------------
+
+// class ColorfulButton extends StatefulWidget {
+//   const ColorfulButton({Key? key}) : super(key: key);
+
+//   @override
+//   State<ColorfulButton> createState() => _ColorfulButtonState();
+// }
+
+// class _ColorfulButtonState extends State<ColorfulButton> {
+//   late FocusNode _node;
+//   bool _focused = false;
+//   late FocusAttachment _nodeAttachment;
+//   Color _color = Colors.white;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _node = FocusNode(debugLabel: 'Button');
+//     _node.addListener(_handleFocusChange);
+//     _nodeAttachment = _node.attach(context, onKey: _handleKeyPress);
+//   }
+
+//   void _handleFocusChange() {
+//     if (_node.hasFocus != _focused) {
+//       setState(() {
+//         _focused = _node.hasFocus;
+//       });
+//     }
+//   }
+
+//   KeyEventResult _handleKeyPress(FocusNode node, RawKeyEvent event) {
+//     if (event is RawKeyDownEvent) {
+//       debugPrint(
+//           'Focus node ${node.debugLabel} got key event: ${event.logicalKey}');
+//       if (event.logicalKey == LogicalKeyboardKey.keyR) {
+//         debugPrint('Changing color to red.');
+//         setState(() {
+//           _color = Colors.red;
+//         });
+//         return KeyEventResult.handled;
+//       } else if (event.logicalKey == LogicalKeyboardKey.keyG) {
+//         debugPrint('Changing color to green.');
+//         setState(() {
+//           _color = Colors.green;
+//         });
+//         return KeyEventResult.handled;
+//       } else if (event.logicalKey == LogicalKeyboardKey.keyB) {
+//         debugPrint('Changing color to blue.');
+//         setState(() {
+//           _color = Colors.blue;
+//         });
+//         return KeyEventResult.handled;
+//       }
+//     }
+//     return KeyEventResult.ignored;
+//   }
+
+//   @override
+//   void dispose() {
+//     _node.removeListener(_handleFocusChange);
+//     // The attachment will automatically be detached in dispose().
+//     _node.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     _nodeAttachment.reparent();
+//     return GestureDetector(
+//       onTap: () {
+//         if (_focused) {
+//           _node.unfocus();
+//         } else {
+//           _node.requestFocus();
+//         }
+//       },
+//       child: Center(
+//         child: Container(
+//           width: 400,
+//           height: 100,
+//           color: _focused ? _color : Colors.white,
+//           alignment: Alignment.center,
+//           child:
+//               Text(_focused ? "I'm in color! Press R,G,B!" : 'Press to focus'),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class MyStatelessWidget extends StatelessWidget {
+//   const MyStatelessWidget({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final TextTheme textTheme = Theme.of(context).textTheme;
+//     return DefaultTextStyle(
+//       style: textTheme.headline4!,
+//       child: Column (
+//         children: [
+//             const ColorfulButton(),
+//             const ColorfulButton(),
+//           ]
+//         )
+//     );
+//   }
+// }

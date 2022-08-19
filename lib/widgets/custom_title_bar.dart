@@ -7,7 +7,7 @@ class CustomTitleBar extends StatelessWidget with PreferredSizeWidget {
   const CustomTitleBar({Key? key}) : super(key: key);
 
   @override
-  AppBar build(BuildContext context) {
+  Widget build(BuildContext context) {
     return AppBar(
       flexibleSpace: SizedBox(
         height: double.infinity,
@@ -16,8 +16,8 @@ class CustomTitleBar extends StatelessWidget with PreferredSizeWidget {
             Expanded(
               child: MoveWindow(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 14.1, horizontal: 70),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 11, horizontal: 70),
                   child: Text(
                     title,
                     style: const TextStyle(
@@ -37,7 +37,7 @@ class CustomTitleBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(50.0);
 }
 
 class WindowButtons extends StatefulWidget {
