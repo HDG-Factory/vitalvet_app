@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:vitalvet_app/widgets/custom_screen.dart';
+import 'package:vitalvet_app/widgets/custom_title_bar.dart';
 
 class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inicio'),
-      ),
-      body: _body(context),
-    );
+    // return Scaffold(
+    //   appBar: const CustomTitleBar(title: 'Vitalvet'),
+    //   body: _body(context),
+    // );
+    return CustomScreen(body: _body(context));
   }
 
   Widget _body(BuildContext context) {

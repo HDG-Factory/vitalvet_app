@@ -7,6 +7,9 @@ import 'package:vitalvet_app/screens/login_screen.dart';
 import 'package:vitalvet_app/screens/register_screen.dart';
 import 'package:vitalvet_app/screens/start_screen.dart';
 
+import '../views/not_found_view.dart';
+import '../views/pets_view.dart';
+
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -18,10 +21,27 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => LoginScreen());
       case HOME_ROUTE:
         return MaterialPageRoute(
-            builder: (_) => BlocProvider(
-                  create: (context) => SideBarBloc(),
-                  child: HomeScreen(),
-                ));
+          builder: (_) => BlocProvider(
+            create: (context) => SideBarBloc(),
+            child: HomeScreen(
+              viewContent: Expanded(
+                child: BlocBuilder<SideBarBloc, SideBarState>(
+                  builder: (context, state) {
+                    if (state is! SideBarSelection) {
+                      return const NotFoundView();
+                    }
+                    switch (state.index) {
+                      case 0:
+                        return const PetsView();
+                      default:
+                        return const NotFoundView();
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
       default:
         return null;
     }
