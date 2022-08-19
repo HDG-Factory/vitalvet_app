@@ -5,8 +5,23 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Settings'),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Settings'),
+          _closeSesionBtn(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _closeSesionBtn(BuildContext context) {
+    return ElevatedButton(
+      child: const Text('Cerrar Sesión'),
+      onPressed: () {
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      },
     );
   }
 }

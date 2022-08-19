@@ -7,12 +7,6 @@ import '../widgets/custom_title_bar.dart';
 class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   appBar: const CustomTitleBar(
-    //     title: 'Vitalvet',
-    //   ),
-    //   body: _body(context),
-    // );
     return CustomScreen(body: _body(context));
   }
 
@@ -21,6 +15,36 @@ class RegisterScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Text('Iniciar sesión'),
+          const Text('¿Ya tienes cuenta? Iniciar sesión'),
+          Row(
+            children: const [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Nombres',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Apellidos',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const TextField(
+            decoration: InputDecoration(
+              labelText: 'Correo',
+            ),
+          ),
+          const TextField(
+            decoration: InputDecoration(
+              labelText: 'Contraseña',
+            ),
+          ),
           _registerBtn(context),
         ],
       ),

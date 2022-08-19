@@ -6,12 +6,6 @@ import '../widgets/custom_title_bar.dart';
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   appBar: const CustomTitleBar(
-    //     title: 'Vitalvet',
-    //   ),
-    //   body: _body(context),
-    // );
     return CustomScreen(body: _body(context));
   }
 
@@ -19,7 +13,21 @@ class LoginScreen extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [_loginBtn(context)],
+        children: [
+          const Text('Iniciar sesión'),
+          const Text('¿No tienes cuenta? Regístrate'),
+          const TextField(
+            decoration: InputDecoration(
+              labelText: 'Correo',
+            ),
+          ),
+          const TextField(
+            decoration: InputDecoration(
+              labelText: 'Contraseña',
+            ),
+          ),
+          _loginBtn(context),
+        ],
       ),
     );
   }
