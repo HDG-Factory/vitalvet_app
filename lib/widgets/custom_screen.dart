@@ -1,6 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/screen_size.dart';
 import 'custom_title_bar.dart';
 
 class CustomScreen extends StatelessWidget {
@@ -9,6 +10,7 @@ class CustomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScreenSize.recalculate(context);
     return WindowBorder(
       color: Colors.black,
       width: 1,

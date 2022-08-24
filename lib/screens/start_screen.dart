@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalvet_app/widgets/custom_screen.dart';
-import 'package:vitalvet_app/widgets/custom_title_bar.dart';
 
 import '../widgets/app_icon_svg.dart';
 
@@ -31,7 +30,7 @@ class StartScreen extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       height: double.infinity,
-                      constraints: BoxConstraints(maxWidth: 400),
+                      constraints: const BoxConstraints(maxWidth: 400),
                       child: CustomPaint(
                         painter: AppIconSvg(),
                         size: Size(

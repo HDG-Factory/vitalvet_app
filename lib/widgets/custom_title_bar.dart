@@ -1,10 +1,18 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
-class CustomTitleBar extends StatelessWidget with PreferredSizeWidget {
-  final String title = 'Vitalvet';
-
+class CustomTitleBar extends StatefulWidget with PreferredSizeWidget {
   const CustomTitleBar({Key? key}) : super(key: key);
+
+  @override
+  State<CustomTitleBar> createState() => _CustomTitleBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(50.0);
+}
+
+class _CustomTitleBarState extends State<CustomTitleBar> {
+  final String title = 'Vitalvet';
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +35,9 @@ class CustomTitleBar extends StatelessWidget with PreferredSizeWidget {
                     ),
                   ),
                 ),
+                onDoubleTap: () {
+                  appWindow.maximizeOrRestore();
+                },
               ),
             ),
             const WindowButtons(),
@@ -35,9 +46,6 @@ class CustomTitleBar extends StatelessWidget with PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(50.0);
 }
 
 class WindowButtons extends StatefulWidget {

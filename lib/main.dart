@@ -1,11 +1,13 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:vitalvet_app/blocs/window/window_size/window_size_bloc.dart';
 import 'package:vitalvet_app/config/config.dart';
 import 'package:vitalvet_app/router/app_router.dart';
-// import 'package:vitalvet_app/widgets/custom_title_bar.dart';
-
 import 'blocs/simple_bloc_observer.dart';
+
+WindowSizeBloc windowSizeBloc = WindowSizeBloc();
 
 void main() {
   if (Config.isInDebugMode) {
@@ -16,6 +18,8 @@ void main() {
     router: AppRouter(),
   ));
 
+  // WidgetsBinding.instance.addObserver(ChangeWindowSizeObserver());
+
   doWhenWindowReady(() {
     const minSize = Size(400, 519);
     appWindow.minSize = minSize;
@@ -24,17 +28,29 @@ void main() {
   });
 }
 
-class VitalVetApp extends StatelessWidget {
+class VitalVetApp extends StatefulWidget {
   final AppRouter router;
 
   const VitalVetApp({super.key, required this.router});
 
   @override
+  State<VitalVetApp> createState() => _VitalVetAppState();
+}
+
+class _VitalVetAppState extends State<VitalVetApp> {
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: router.generateRoute,
-        title: 'VitalVet',
-        theme: ThemeData());
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: widget.router.generateRoute,
+      title: 'VitalVet',
+      theme: ThemeData(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+        textTheme: GoogleFonts.montserratTextTheme(),
+      ),
+      darkTheme: ThemeData.light(),
+    );
   }
 }
