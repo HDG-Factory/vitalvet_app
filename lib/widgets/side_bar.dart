@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalvet_app/blocs/side_bar/extension/side_bar_extension_bloc.dart';
-import 'package:vitalvet_app/blocs/side_bar/selection/side_bar_selection_bloc.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
@@ -18,7 +17,6 @@ class _SideBarState extends State<SideBar> {
 
   @override
   Widget build(BuildContext context) {
-    final sideBarSelectionBloc = context.read<SideBarSelectionBloc>();
     final sideBarExtensionBloc = context.read<SideBarExtensionBloc>();
 
     return Padding(
@@ -50,34 +48,19 @@ class _SideBarState extends State<SideBar> {
                 children: [
                   _appIconBtn(sideBarExtensionBloc, extended),
                   Expanded(
-                    child: BlocBuilder<SideBarSelectionBloc, int>(
-                      builder: (context, int currentIndex) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: _getItems(
-                                  topItems,
-                                  sideBarSelectionBloc,
-                                  0,
-                                  isExtended,
-                                  currentIndex),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: _getItems(
-                                  bottomItems,
-                                  sideBarSelectionBloc,
-                                  3,
-                                  isExtended,
-                                  currentIndex),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: _getItems(topItems, 0, isExtended),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: _getItems(bottomItems, 3, isExtended),
+                      ),
+                    ],
+                  )),
                 ],
               ),
             ),
@@ -120,25 +103,20 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-  List<Widget> _getItems(List<List<Object>> list, sideBarSelectionBloc,
-      int startIndex, bool extended, int currentIndex) {
+  List<Widget> _getItems(
+      List<List<Object>> list, int startIndex, bool extended) {
     List<MyNavigationRailFab> items = [];
 
     for (int i = 0; i < list.length; i++) {
       int index = startIndex;
-      if (currentIndex == 1) {
-        print('hi');
-      }
       items.add(MyNavigationRailFab(
         icon: list[i][0] as Widget,
         text: list[i][1] as String,
         index: index,
         extended: extended,
-        selected: currentIndex == index,
+        // selected: currentIndex == index,
         onPressed: () {
-          setState(() {
-            sideBarSelectionBloc.add(ChangeSideBarSelectionEvent(index));
-          });
+          // GO TO ROUTE
         },
       ));
       startIndex++;
