@@ -2,12 +2,10 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vitalvet_app/blocs/window/window_size/window_size_bloc.dart';
 import 'package:vitalvet_app/config/config.dart';
 import 'package:vitalvet_app/router/app_router.dart';
+import 'package:vitalvet_app/services/api.dart';
 import 'blocs/simple_bloc_observer.dart';
-
-WindowSizeBloc windowSizeBloc = WindowSizeBloc();
 
 void main() {
   if (Config.isInDebugMode) {
@@ -26,6 +24,8 @@ void main() {
     appWindow.title = 'Vitalvet';
     appWindow.show();
   });
+
+  Api.initializeApi();
 }
 
 class VitalVetApp extends StatefulWidget {

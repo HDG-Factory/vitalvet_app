@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
+  final TextEditingController? fieldController;
   final String? labelText;
   final bool? obscureText;
   final String? Function(String?)? validator;
 
   const CustomTextField(
-      {Key? key, this.labelText, this.obscureText, this.validator})
+      {Key? key,
+      this.labelText,
+      this.obscureText,
+      this.validator,
+      this.fieldController})
       : super(key: key);
 
   @override
   State<CustomTextField> createState() =>
-      _CustomTextFieldState(obscureText, validator);
+      _CustomTextFieldState(obscureText, validator, fieldController);
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  final TextEditingController? fieldController;
   bool? obscureText;
   final String? Function(String?)? _validator;
 
-  _CustomTextFieldState(this.obscureText, this._validator);
+  _CustomTextFieldState(
+      this.obscureText, this._validator, this.fieldController);
 
   void _toggle() {
     setState(() {
@@ -29,6 +36,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: fieldController,
       obscureText: obscureText ?? false,
       enableSuggestions: obscureText != null ? !obscureText! : true,
       autocorrect: obscureText != null ? !obscureText! : true,

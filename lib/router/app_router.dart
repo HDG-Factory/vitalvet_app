@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalvet_app/blocs/account/account_bloc.dart';
 import 'package:vitalvet_app/blocs/side_bar/extension/side_bar_extension_bloc.dart';
 import 'package:vitalvet_app/blocs/side_bar/selection/side_bar_selection_bloc.dart';
 import 'package:vitalvet_app/constants/constants.dart';
@@ -11,6 +12,7 @@ import 'package:vitalvet_app/views/clinical_histories_view.dart';
 import 'package:vitalvet_app/views/profile_view.dart';
 import 'package:vitalvet_app/views/settings_view.dart';
 
+import '../blocs/pets/pets_list/pets_list_bloc.dart';
 import '../views/calendar_view.dart';
 import '../views/not_found_view.dart';
 import '../views/pets_view.dart';
@@ -21,9 +23,17 @@ class AppRouter {
       case START_ROUTE:
         return MaterialPageRoute(builder: (context) => StartScreen());
       case REGISTER_ROUTE:
-        return MaterialPageRoute(builder: (context) => RegisterScreen());
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                  create: (context) => AccountBloc(),
+                  child: const RegisterScreen(),
+                ));
       case LOGIN_ROUTE:
-        return MaterialPageRoute(builder: (context) => LoginScreen());
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                  create: (context) => AccountBloc(),
+                  child: LoginScreen(),
+                ));
       case HOME_ROUTE:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -41,7 +51,10 @@ class AppRouter {
                   builder: (context, int currentIndex) {
                     switch (currentIndex) {
                       case PETS_VIEW_INDEX:
-                        return const PetsView();
+                        return BlocProvider(
+                          create: (context) => PetsListBloc(),
+                          child: const PetsView(),
+                        );
                       case CLINICAL_HISTORIES_VIEW_INDEX:
                         return const ClinicalHistoriesView();
                       case CALENDAR_VIEW_INDEX:

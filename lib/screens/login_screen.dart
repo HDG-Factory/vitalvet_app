@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vitalvet_app/blocs/account/account_bloc.dart';
+import 'package:vitalvet_app/services/user_api.service.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
 import 'package:vitalvet_app/widgets/text_link.dart';
 
@@ -9,16 +12,29 @@ import '../widgets/login_register_btn.dart';
 
 class LoginScreen extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
+  final fieldsControllers = List.generate(2, (_) => TextEditingController());
 
   LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CustomScreen(body: _body(context));
+    return CustomScreen(
+        body: BlocListener<AccountBloc, AccountState>(
+      listener: (context, state) {
+        if (state is AccountLogged) {
+          _sendToHomeScreen(context);
+        }
+      },
+      child: _body(context),
+    ));
   }
+
+  Future<Object?> _sendToHomeScreen(BuildContext context) =>
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
 
   Widget _body(BuildContext context) {
     MediaQuery.of(context);
+    final accountBloc = context.read<AccountBloc>();
     const backgroundImage = 'assets/shiba_inu.png';
 
     return Stack(
@@ -52,6 +68,7 @@ class LoginScreen extends StatelessWidget {
                 height: 10,
               ),
               CustomTextField(
+                fieldController: fieldsControllers[0],
                 labelText: 'Correo',
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -66,6 +83,7 @@ class LoginScreen extends StatelessWidget {
                 height: 10,
               ),
               CustomTextField(
+                fieldController: fieldsControllers[1],
                 labelText: 'Contraseña',
                 obscureText: true,
                 validator: (value) {
@@ -83,7 +101,7 @@ class LoginScreen extends StatelessWidget {
               Row(
                 children: [
                   const Spacer(),
-                  _loginBtn(context),
+                  _loginBtn(context, accountBloc),
                   if (!isMediumOrMoreScreen) const Spacer(),
                 ],
               ),
@@ -94,7 +112,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Transform _backgroundImage(String fileName, BuildContext context) {
+  Transform _backgroundImage(String fileName, context) {
     return Transform.translate(
       offset: (isLargeOrMoreScreen) ? Offset(-10.wb, 0) : Offset(-15.wb, 0),
       child: FittedBox(
@@ -106,7 +124,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Container _backgroundLinearGradient(BuildContext context) {
+  Container _backgroundLinearGradient(context) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -131,7 +149,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Align _mainColumn(BuildContext context, List<Widget> children) {
+  Align _mainColumn(context, List<Widget> children) {
     return Align(
       alignment:
           (isMediumOrMoreScreen) ? Alignment.centerRight : Alignment.center,
@@ -155,7 +173,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Text _loginTitle(BuildContext context) {
+  Text _loginTitle(context) {
     return Text(
       'Iniciar sesión',
       textAlign: (isMediumOrMoreScreen) ? TextAlign.right : TextAlign.center,
@@ -170,13 +188,17 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _loginBtn(BuildContext context) {
+  Widget _loginBtn(context, accountBloc) {
     return LoginRegisterBtn(
       text: 'Iniciar sesión',
-      onPressed: () {
+      onPressed: () async {
         if (formKey.currentState!.validate()) {
-          formKey.currentState!.save();
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          accountBloc.add(LoginAccountEvent(
+            email: fieldsControllers[0].text,
+            password: fieldsControllers[1].text,
+          ));
+
+          // Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         }
       },
     );

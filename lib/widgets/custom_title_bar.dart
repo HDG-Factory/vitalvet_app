@@ -35,9 +35,6 @@ class _CustomTitleBarState extends State<CustomTitleBar> {
                     ),
                   ),
                 ),
-                onDoubleTap: () {
-                  appWindow.maximizeOrRestore();
-                },
               ),
             ),
             const WindowButtons(),
@@ -64,13 +61,27 @@ class _WindowButtonsState extends State<WindowButtons> {
 
   @override
   Widget build(BuildContext context) {
+    double height = 50;
+
     return Row(
       children: [
-        MinimizeWindowButton(),
-        appWindow.isMaximized
-            ? RestoreWindowButton(onPressed: maximizeOrRestore)
-            : MaximizeWindowButton(onPressed: maximizeOrRestore),
-        CloseWindowButton()
+        SizedBox(
+          width: height,
+          height: height,
+          child: MinimizeWindowButton(),
+        ),
+        SizedBox(
+          width: height,
+          height: height,
+          child: appWindow.isMaximized
+              ? RestoreWindowButton(onPressed: maximizeOrRestore)
+              : MaximizeWindowButton(onPressed: maximizeOrRestore),
+        ),
+        SizedBox(
+          width: height,
+          height: height,
+          child: CloseWindowButton(),
+        ),
       ],
     );
   }

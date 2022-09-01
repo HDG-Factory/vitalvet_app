@@ -1,3 +1,3 @@
 class Config {
-  static const bool isInDebugMode = false;
+  static const bool isInDebugMode = true;
 }
