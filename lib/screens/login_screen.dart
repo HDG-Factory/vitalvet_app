@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalvet_app/blocs/account/account_bloc.dart';
-import 'package:vitalvet_app/services/user_api.service.dart';
+import 'package:vitalvet_app/constants/constants.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
 import 'package:vitalvet_app/widgets/text_link.dart';
 
@@ -30,10 +30,11 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<Object?> _sendToHomeScreen(BuildContext context) =>
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, '$HOME_ROUTE/$PETS_LIST_VIEW_ROUTE', (route) => false);
 
   Widget _body(BuildContext context) {
-    MediaQuery.of(context);
+    forceRerender(context);
     final accountBloc = context.read<AccountBloc>();
     const backgroundImage = 'assets/shiba_inu.png';
 
@@ -56,7 +57,7 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   const Spacer(),
                   const TextLink(
-                      navigateTo: '/register',
+                      navigateTo: REGISTER_ROUTE,
                       text1: '¿No tienes cuenta? ',
                       color1: Colors.black,
                       text2: 'Regístrate',

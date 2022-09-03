@@ -3,24 +3,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalvet_app/blocs/side_bar/extension/side_bar_extension_bloc.dart';
+import 'package:vitalvet_app/constants/constants.dart';
 
 class SideBar extends StatefulWidget {
-  const SideBar({Key? key}) : super(key: key);
+  final String currentView;
+
+  const SideBar({Key? key, required this.currentView}) : super(key: key);
 
   @override
-  State<SideBar> createState() => _SideBarState();
+  State<SideBar> createState() => _SideBarState(this.currentView);
 }
 
 class _SideBarState extends State<SideBar> {
   bool mouseEntered = true;
   bool extended = false;
+  final String currentRoute;
+
+  _SideBarState(this.currentRoute);
 
   @override
   Widget build(BuildContext context) {
     final sideBarExtensionBloc = context.read<SideBarExtensionBloc>();
 
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.only(left: 20.0, top: 20.0, bottom: 20.0),
       child: BlocBuilder<SideBarExtensionBloc, bool>(
         builder: (context, bool isExtended) {
           extended = isExtended;
@@ -95,8 +101,6 @@ class _SideBarState extends State<SideBar> {
                             key: ValueKey('icon3')),
                   )),
       ),
-      text: 'Agregar',
-      index: 500,
       onPressed: () {
         sideBarExtensionBloc.add(ChangeSideBarExtensionEvent(!extended));
       },
@@ -112,11 +116,12 @@ class _SideBarState extends State<SideBar> {
       items.add(MyNavigationRailFab(
         icon: list[i][0] as Widget,
         text: list[i][1] as String,
-        index: index,
+        route: SIDE_BAR_VIEWS_ROUTES[index],
         extended: extended,
-        // selected: currentIndex == index,
+        selected: currentRoute == SIDE_BAR_VIEWS_ROUTES[index],
         onPressed: () {
-          // GO TO ROUTE
+          Navigator.pushNamedAndRemoveUntil(context,
+              '$HOME_ROUTE/${SIDE_BAR_VIEWS_ROUTES[index]}', (route) => false);
         },
       ));
       startIndex++;
@@ -161,13 +166,13 @@ class MyNavigationRailFab extends StatelessWidget {
   final String? text;
   final Widget? icon;
   final VoidCallback? onPressed;
-  final int? index;
+  final String? route;
   final bool? selected;
 
   const MyNavigationRailFab(
       {super.key,
       this.text,
-      this.index,
+      this.route,
       this.onPressed,
       this.icon,
       this.extended,

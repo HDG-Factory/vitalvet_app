@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vitalvet_app/constants/constants.dart';
 import 'package:vitalvet_app/widgets/custom_screen.dart';
 
+import '../utils/screen_size.dart';
 import '../widgets/app_icon_svg.dart';
 
 class StartScreen extends StatelessWidget {
@@ -14,6 +16,7 @@ class StartScreen extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
+    forceRerender(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -92,7 +95,7 @@ class StartScreen extends StatelessWidget {
   Widget _loginBtn(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/login');
+        Navigator.pushNamed(context, LOGIN_ROUTE);
       },
       style: ElevatedButton.styleFrom(
         primary: Colors.blue,
@@ -114,7 +117,7 @@ class StartScreen extends StatelessWidget {
   Widget _registerBtn(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/register');
+        Navigator.pushNamed(context, REGISTER_ROUTE);
       },
       style: ElevatedButton.styleFrom(
         primary: const Color.fromARGB(255, 85, 91, 105),

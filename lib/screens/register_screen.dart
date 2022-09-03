@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pfile_picker/pfile_picker.dart';
+import 'package:vitalvet_app/constants/constants.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
 import 'package:vitalvet_app/widgets/custom_date_picker.dart';
 
@@ -34,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _body(BuildContext context) {
-    MediaQuery.of(context);
+    forceRerender(context);
     final registerSteps = _registerSteps();
 
     return Stack(
@@ -158,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               if (!isMediumOrMoreScreen) const Spacer(),
               const TextLink(
-                  navigateTo: '/login',
+                  navigateTo: LOGIN_ROUTE,
                   text1: '¿Ya tienes cuenta? ',
                   color1: Colors.black,
                   text2: 'Inicia sesión',

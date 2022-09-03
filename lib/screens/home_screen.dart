@@ -5,8 +5,10 @@ import '../widgets/custom_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final Widget viewContent;
+  final String currentView;
 
-  const HomeScreen({super.key, required this.viewContent});
+  const HomeScreen(
+      {super.key, required this.viewContent, required this.currentView});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,9 @@ class HomeScreen extends StatelessWidget {
   Widget _body(BuildContext context) {
     return Row(
       children: <Widget>[
-        const SideBar(),
+        SideBar(
+          currentView: currentView,
+        ),
         viewContent,
       ],
     );

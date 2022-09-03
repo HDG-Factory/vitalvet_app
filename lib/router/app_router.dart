@@ -7,6 +7,7 @@ import 'package:vitalvet_app/screens/home_screen.dart';
 import 'package:vitalvet_app/screens/login_screen.dart';
 import 'package:vitalvet_app/screens/register_screen.dart';
 import 'package:vitalvet_app/screens/start_screen.dart';
+import 'package:vitalvet_app/views/add_pet_view.dart';
 import 'package:vitalvet_app/views/clinical_histories_view.dart';
 import 'package:vitalvet_app/views/profile_view.dart';
 import 'package:vitalvet_app/views/settings_view.dart';
@@ -43,27 +44,33 @@ class AppRouter {
               ),
             ],
             child: HomeScreen(
+              currentView: routeNames[1],
               viewContent: Expanded(
                   child: (() {
+                if (routeNames.length > 2) {
+                  switch (routeNames[2]) {
+                    case ADD_PET_VIEW_ROUTE:
+                      return AddPetView();
+                  }
+                }
                 switch (routeNames[1]) {
-                  case 'a':
+                  case PETS_LIST_VIEW_ROUTE:
                     return BlocProvider(
                       create: (context) => PetsListBloc(),
                       child: const PetsListView(),
                     );
-                  case PETS_VIEW_INDEX:
+                  case CLINICAL_HISTORIES_VIEW_ROUTE:
                     return const ClinicalHistoriesView();
-                  case CALENDAR_VIEW_INDEX:
+                  case CALENDAR_VIEW_ROUTE:
                     return const CalendarView();
-                  case PROFILE_VIEW_INDEX:
+                  case PROFILE_VIEW_ROUTE:
                     return const ProfileView();
-                  case NOTIFICATIONS_INDEX:
+                  case NOTIFICATIONS_ROUTE:
                     return const NotFoundView();
-                  case SETTINGS_VIEW_INDEX:
+                  case SETTINGS_VIEW_ROUTE:
                     return const SettingsView();
-                  default:
-                    return const NotFoundView();
                 }
+                return const NotFoundView();
               }())),
             ),
           ),

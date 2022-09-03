@@ -8,6 +8,10 @@ bool get isSmallScreen => ScreenSize._screenWidth < MEDIUM_BREAKPOINT;
 bool get isMediumOrMoreScreen => ScreenSize._screenWidth >= MEDIUM_BREAKPOINT;
 bool get isLargeOrMoreScreen => ScreenSize._screenWidth >= LARGE_BREAKPOINT;
 
+void forceRerender(context) {
+  MediaQuery.of(context);
+}
+
 class ScreenSize {
   static double w = 0;
   static double h = 0;

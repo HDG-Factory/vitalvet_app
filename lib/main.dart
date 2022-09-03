@@ -41,7 +41,7 @@ class _VitalVetAppState extends State<VitalVetApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: Config.isInDebugMode,
       onGenerateRoute: widget.router.generateRoute,
       title: 'VitalVet',
       theme: ThemeData(
