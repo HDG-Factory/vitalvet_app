@@ -63,7 +63,7 @@ class _SideBarState extends State<SideBar> {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: _getItems(bottomItems, 3, isExtended),
+                        children: _getItems(bottomItems, 2, isExtended),
                       ),
                     ],
                   )),
@@ -134,10 +134,6 @@ class _SideBarState extends State<SideBar> {
     [
       const Icon(Icons.cruelty_free),
       'Mascotas',
-    ],
-    [
-      const Icon(Icons.description_outlined),
-      'Historias clínicas',
     ],
     [
       const Icon(Icons.calendar_month),

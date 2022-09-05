@@ -5,6 +5,7 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController? fieldController;
   final String? labelText;
   final bool? obscureText;
+  final bool? multiLine;
   final String? Function(String?)? validator;
 
   const CustomTextField(
@@ -12,18 +13,20 @@ class CustomTextField extends StatefulWidget {
       this.labelText,
       this.obscureText,
       this.validator,
-      this.fieldController})
+      this.fieldController,
+      this.multiLine})
       : super(key: key);
 
   @override
   State<CustomTextField> createState() =>
-      _CustomTextFieldState(obscureText, validator, fieldController);
+      _CustomTextFieldState(obscureText, validator, fieldController, multiLine);
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
   FocusNode fieldFocusNode = FocusNode();
   final TextEditingController? fieldController;
   bool? obscureText;
+  final bool? multiLine;
   final String? Function(String?)? _validator;
   Color _borderColor = Colors.blue.withOpacity(0.7);
   BorderRadius _borderRadius = BorderRadius.circular(20.0);
@@ -31,7 +34,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   double _borderPadding = 1.5;
 
   _CustomTextFieldState(
-      this.obscureText, this._validator, this.fieldController);
+      this.obscureText, this._validator, this.fieldController, this.multiLine);
 
   void _toggle() {
     setState(() {
@@ -69,6 +72,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
       ),
       child: TextFormField(
+        minLines: 1,
+        maxLines: multiLine == true ? 10 : 1,
+        keyboardType: multiLine == true ? TextInputType.multiline : null,
         focusNode: fieldFocusNode,
         controller: fieldController,
         obscureText: obscureText ?? false,

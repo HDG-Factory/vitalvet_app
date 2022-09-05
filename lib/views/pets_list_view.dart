@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:vitalvet_app/blocs/pets/pets_list/pets_list_bloc.dart';
 import 'package:vitalvet_app/constants/constants.dart';
 import 'package:vitalvet_app/widgets/search_bar.dart';
 
+import '../utils/globals.dart';
 import '../widgets/pets_list.dart';
 
 class PetsListView extends StatelessWidget {
   const PetsListView({Key? key}) : super(key: key);
 
+  void _initState(context) {
+    Globals.saveBtnVisible = false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _initState(context);
     return Column(
       children: [
         Row(
@@ -32,7 +35,13 @@ class PetsListView extends StatelessWidget {
             ),
           ],
         ),
-        const Expanded(child: PetsList()),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
+          child: SizedBox(
+            height: 500,
+            child: PetsList(),
+          ),
+        ),
       ],
     );
   }

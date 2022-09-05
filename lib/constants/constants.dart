@@ -5,7 +5,9 @@ const HOME_ROUTE = 'home';
 
 const PETS_LIST_VIEW_ROUTE = 'pets_list';
 const ADD_PET_VIEW_ROUTE = 'add_pet';
-const CLINICAL_HISTORIES_VIEW_ROUTE = 'clinical_histories';
+const EDIT_PET_VIEW_ROUTE = 'edit_pet';
+const PET_MEDICAL_HISTORY_VIEW_ROUTE = 'pet_medical_history';
+const PET_MEDICAL_ATTENTION_VIEW_ROUTE = 'pet_medical_attention';
 const CALENDAR_VIEW_ROUTE = 'calendar';
 const PROFILE_VIEW_ROUTE = 'profile';
 const NOTIFICATIONS_ROUTE = 'notifications';
@@ -13,7 +15,6 @@ const SETTINGS_VIEW_ROUTE = 'settings';
 
 const SIDE_BAR_VIEWS_ROUTES = [
   PETS_LIST_VIEW_ROUTE,
-  CLINICAL_HISTORIES_VIEW_ROUTE,
   CALENDAR_VIEW_ROUTE,
   PROFILE_VIEW_ROUTE,
   NOTIFICATIONS_ROUTE,

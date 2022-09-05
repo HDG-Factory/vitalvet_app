@@ -8,7 +8,7 @@ class Api {
   static Dio api = Dio();
   static String? accessToken;
 
-  static const _storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
 
   static initializeApi() {
     api.interceptors
@@ -26,7 +26,7 @@ class Api {
       return handler.next(options);
     }, onError: (DioError error, handler) async {
       if (isTokenError(error)) {
-        if (await _storage.containsKey(key: 'refreshToken')) {
+        if (await storage.containsKey(key: 'refreshToken')) {
           await refreshToken();
           return handler.resolve(await _retry(error.requestOptions));
         }
@@ -49,16 +49,20 @@ class Api {
   }
 
   static Future<void> refreshToken() async {
-    final refreshToken = await _storage.read(key: 'refreshToken');
-    final response = await api.post('/auth/refresh', data: {
-      'refreshToken': refreshToken,
-    });
+    final refreshToken = await storage.read(key: 'refreshToken');
+    final response = await api.post(
+      '/auth/refresh',
+      data: {'refreshToken': refreshToken},
+    );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
+      if (Config.isInDebugMode) {
+        print('Token Refreshed');
+      }
       accessToken = response.data['accessToken'];
     } else {
       accessToken = null;
-      _storage.deleteAll();
+      storage.deleteAll();
     }
   }
 

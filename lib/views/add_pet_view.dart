@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
 import 'package:vitalvet_app/widgets/custom_text_field.dart';
 
+import '../utils/globals.dart';
 import '../widgets/custom_date_picker.dart';
 
 class AddPetView extends StatelessWidget {
@@ -9,9 +10,17 @@ class AddPetView extends StatelessWidget {
 
   AddPetView({Key? key}) : super(key: key);
 
+  void _initState(context) {
+    Globals.saveBtnVisible = true;
+    Globals.onPressed = () {
+      print('Save');
+    };
+    forceRerender(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    forceRerender(context);
+    _initState(context);
     return Center(
       child: SingleChildScrollView(
         child: Column(

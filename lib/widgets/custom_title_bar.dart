@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:vitalvet_app/utils/globals.dart';
 
 class CustomTitleBar extends StatefulWidget with PreferredSizeWidget {
   const CustomTitleBar({Key? key}) : super(key: key);
@@ -23,17 +24,39 @@ class _CustomTitleBarState extends State<CustomTitleBar> {
           children: [
             Expanded(
               child: MoveWindow(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 11, horizontal: 70),
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 21,
-                      fontWeight: FontWeight.w600,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 11, horizontal: 70),
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      child: Center(
+                        child: Visibility(
+                          visible: Globals.saveBtnVisible,
+                          child: ElevatedButton(
+                            onPressed: Globals.onPressed ?? () {},
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onPrimary: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text('Guardar'),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),

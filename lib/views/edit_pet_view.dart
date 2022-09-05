@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vitalvet_app/utils/globals.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
 import 'package:vitalvet_app/widgets/custom_text_field.dart';
 
+import '../constants/constants.dart';
 import '../widgets/custom_date_picker.dart';
 
 class EditPetView extends StatelessWidget {
@@ -9,9 +11,17 @@ class EditPetView extends StatelessWidget {
 
   EditPetView({Key? key}) : super(key: key);
 
+  void _initState(context) {
+    Globals.saveBtnVisible = true;
+    Globals.onPressed = () {
+      print('Save');
+    };
+    forceRerender(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    forceRerender(context);
+    _initState(context);
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -102,7 +112,15 @@ class EditPetView extends StatelessWidget {
                             const SizedBox(height: 30),
                             ElevatedButton(
                               onPressed: () {},
-                              child: const Text('Agregar imágenes'),
+                              child: const Text('Ver imágenes'),
+                            ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context,
+                                    '$HOME_ROUTE/$PETS_LIST_VIEW_ROUTE/$PET_MEDICAL_HISTORY_VIEW_ROUTE');
+                              },
+                              child: const Text('Ver historial clínico'),
                             ),
                           ],
                         ),

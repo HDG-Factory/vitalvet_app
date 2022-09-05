@@ -14,4 +14,10 @@ class UserApiService {
     Response response = await Api.post('$baseUrl/login', userData, 'LoginUser');
     return response;
   }
+
+  Future<Response> loginTestUser(userData) async {
+    Response response =
+        await Api.post('$baseUrl/login/test', userData, 'LoginUser');
+    return response;
+  }
 }
