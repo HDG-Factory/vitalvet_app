@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalvet_app/blocs/side_bar/extension/side_bar_extension_bloc.dart';
-import 'package:vitalvet_app/constants/constants.dart';
+import 'package:vitalvet_app/utils/constants.dart';
 
 class SideBar extends StatefulWidget {
   final String currentView;
@@ -15,7 +15,7 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  bool mouseEntered = true;
+  bool mouseEntered = false;
   bool extended = false;
   final String currentRoute;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vitalvet_app/widgets/side_bar.dart';
 
-import '../widgets/custom_screen.dart';
+import '../widgets/templates/custom_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final Widget viewContent;

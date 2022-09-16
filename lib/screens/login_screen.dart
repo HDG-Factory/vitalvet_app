@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalvet_app/blocs/account/account_bloc.dart';
-import 'package:vitalvet_app/constants/constants.dart';
+import 'package:vitalvet_app/utils/constants.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
-import 'package:vitalvet_app/widgets/text_link.dart';
+import 'package:vitalvet_app/widgets/templates/text_link.dart';
 
-import '../widgets/custom_screen.dart';
-import '../widgets/custom_text_field.dart';
+import '../widgets/templates/custom_screen.dart';
+import '../widgets/templates/custom_text_field.dart';
 import '../widgets/login_register_btn.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -15,6 +15,13 @@ class LoginScreen extends StatelessWidget {
   final fieldsControllers = List.generate(2, (_) => TextEditingController());
 
   LoginScreen({Key? key}) : super(key: key);
+
+  void _initState(context) {
+    forceRerender(context);
+    // TODO: delete this
+    fieldsControllers[0].text = 'hello@example.com';
+    fieldsControllers[1].text = 'f5Haa8#asD';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,7 @@ class LoginScreen extends StatelessWidget {
           context, '$HOME_ROUTE/$PETS_LIST_VIEW_ROUTE', (route) => false);
 
   Widget _body(BuildContext context) {
-    forceRerender(context);
+    _initState(context);
     final accountBloc = context.read<AccountBloc>();
     const backgroundImage = 'assets/shiba_inu.png';
 

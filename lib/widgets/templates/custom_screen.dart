@@ -1,7 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/screen_size.dart';
+import '../../utils/screen_size.dart';
 import 'custom_title_bar.dart';
 
 class CustomScreen extends StatelessWidget {

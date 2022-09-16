@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vitalvet_app/blocs/account/account_bloc.dart';
+import 'package:vitalvet_app/blocs/owners/delete_owner/delete_owner_bloc.dart';
+import 'package:vitalvet_app/blocs/owners/owners_list/owners_list_bloc.dart';
+import 'package:vitalvet_app/blocs/pets/add_pet/add_pet_bloc.dart';
 import 'package:vitalvet_app/blocs/side_bar/extension/side_bar_extension_bloc.dart';
-import 'package:vitalvet_app/constants/constants.dart';
+import 'package:vitalvet_app/blocs/species/species_list/species_list_bloc.dart';
+import 'package:vitalvet_app/utils/constants.dart';
 import 'package:vitalvet_app/screens/home_screen.dart';
 import 'package:vitalvet_app/screens/login_screen.dart';
 import 'package:vitalvet_app/screens/register_screen.dart';
@@ -52,7 +56,29 @@ class AppRouter {
                 if (routeNames.length > 2) {
                   switch (routeNames[2]) {
                     case ADD_PET_VIEW_ROUTE:
-                      return AddPetView();
+                      final addPetBloc = AddPetBloc();
+                      final deleteOwnerBloc = DeleteOwnerBloc();
+
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (_) => OwnersListBloc(),
+                          ),
+                          BlocProvider(
+                            create: (_) => deleteOwnerBloc,
+                          ),
+                          BlocProvider(
+                            create: (_) => SpeciesListBloc(),
+                          ),
+                          BlocProvider(
+                            create: (_) => addPetBloc,
+                          ),
+                        ],
+                        child: AddPetView(
+                          addPetBloc: addPetBloc,
+                          deleteOwnerBloc: deleteOwnerBloc,
+                        ),
+                      );
                     case EDIT_PET_VIEW_ROUTE:
                       return EditPetView();
                     case PET_MEDICAL_HISTORY_VIEW_ROUTE:

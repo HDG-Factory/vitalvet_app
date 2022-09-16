@@ -18,9 +18,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       };
 
       emit(RegisteringAccount());
-      await UserApiService().registerUser(userData).then((response) {
+      await UserApiService().registerUser(userData).then((response) async {
         if (response.statusCode == 201) {
           Api.accessToken = response.data['accessToken'];
+          await Api.storage
+              .write(key: 'refreshToken', value: response.data['refreshToken']);
           emit(AccountRegistered());
         } else {
           switch (response.data['message']) {
@@ -56,9 +58,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       };
 
       emit(LoggingAccount());
-      await UserApiService().loginUser(userData).then((response) {
+      await UserApiService().loginUser(userData).then((response) async {
         if (response.statusCode == 200) {
           Api.accessToken = response.data['accessToken'];
+          await Api.storage
+              .write(key: 'refreshToken', value: response.data['refreshToken']);
           emit(AccountLogged());
         } else {
           switch (response.data['message']) {

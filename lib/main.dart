@@ -6,6 +6,7 @@ import 'package:vitalvet_app/config/config.dart';
 import 'package:vitalvet_app/router/app_router.dart';
 import 'package:vitalvet_app/services/api.dart';
 import 'blocs/simple_bloc_observer.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   if (Config.isInDebugMode) {
@@ -41,6 +42,12 @@ class _VitalVetAppState extends State<VitalVetApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es', ''),
+      ],
       debugShowCheckedModeBanner: Config.isInDebugMode,
       onGenerateRoute: widget.router.generateRoute,
       title: 'VitalVet',

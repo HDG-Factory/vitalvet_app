@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vitalvet_app/constants/constants.dart';
-import 'package:vitalvet_app/widgets/custom_screen.dart';
+import 'package:vitalvet_app/utils/constants.dart';
+import 'package:vitalvet_app/widgets/templates/custom_screen.dart';
 
 import '../utils/screen_size.dart';
 import '../widgets/app_icon_svg.dart';

@@ -1,7 +1,7 @@
 class Patient {
   int? id;
   String? name;
-  int? weight;
+  double? weight;
   DateTime? birthday;
   DateTime? dateOfDeath;
   String? mainPicture;
@@ -26,7 +26,7 @@ class Patient {
   factory Patient.fromJson(Map<String, dynamic> json) => Patient(
         id: json["id"] == null ? null : json["id"] as int,
         name: json["name"],
-        weight: json["weight"] == null ? null : json["weight"] as int,
+        weight: json["weight"] == null ? null : json["weight"] as double,
         birthday: json["birthday"] == null
             ? null
             : DateTime.parse(json["birthday"] as String),

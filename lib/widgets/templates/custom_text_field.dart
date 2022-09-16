@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -7,6 +8,9 @@ class CustomTextField extends StatefulWidget {
   final bool? obscureText;
   final bool? multiLine;
   final String? Function(String?)? validator;
+  final bool? readOnly;
+  final bool? onlyText;
+  final bool? onlyNumbers;
 
   const CustomTextField(
       {Key? key,
@@ -14,12 +18,15 @@ class CustomTextField extends StatefulWidget {
       this.obscureText,
       this.validator,
       this.fieldController,
-      this.multiLine})
+      this.multiLine,
+      this.readOnly,
+      this.onlyNumbers,
+      this.onlyText})
       : super(key: key);
 
   @override
-  State<CustomTextField> createState() =>
-      _CustomTextFieldState(obscureText, validator, fieldController, multiLine);
+  State<CustomTextField> createState() => _CustomTextFieldState(obscureText,
+      validator, fieldController, multiLine, readOnly, onlyNumbers, onlyText);
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
@@ -28,13 +35,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
   bool? obscureText;
   final bool? multiLine;
   final String? Function(String?)? _validator;
+  final bool? readOnly;
+  final bool? onlyText;
+  final bool? onlyNumbers;
   Color _borderColor = Colors.blue.withOpacity(0.7);
   BorderRadius _borderRadius = BorderRadius.circular(20.0);
   double _borderWidth = 1.5;
   double _borderPadding = 1.5;
 
-  _CustomTextFieldState(
-      this.obscureText, this._validator, this.fieldController, this.multiLine);
+  _CustomTextFieldState(this.obscureText, this._validator, this.fieldController,
+      this.multiLine, this.readOnly, this.onlyNumbers, this.onlyText);
 
   void _toggle() {
     setState(() {
@@ -74,12 +84,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: TextFormField(
         minLines: 1,
         maxLines: multiLine == true ? 10 : 1,
-        keyboardType: multiLine == true ? TextInputType.multiline : null,
+        keyboardType: multiLine == true
+            ? TextInputType.multiline
+            : onlyNumbers == true
+                ? TextInputType.number
+                : null,
         focusNode: fieldFocusNode,
         controller: fieldController,
         obscureText: obscureText ?? false,
+        readOnly: readOnly ?? false,
         enableSuggestions: obscureText != null ? !obscureText! : true,
         autocorrect: obscureText != null ? !obscureText! : true,
+        inputFormatters: (onlyText == true)
+            ? [FilteringTextInputFormatter.deny(RegExp("[0-9]"))]
+            : (onlyNumbers == true)
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : [],
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,

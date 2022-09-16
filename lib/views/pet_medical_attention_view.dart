@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
-import 'package:vitalvet_app/widgets/custom_date_picker.dart';
-import 'package:vitalvet_app/widgets/custom_text_field.dart';
+import 'package:vitalvet_app/widgets/templates/custom_date_picker.dart';
+import 'package:vitalvet_app/widgets/templates/custom_text_field.dart';
 import 'package:vitalvet_app/widgets/pet_medical_attentions_list.dart';
 
 import '../utils/globals.dart';

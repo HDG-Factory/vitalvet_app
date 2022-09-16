@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:vitalvet_app/utils/globals.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
-import 'package:vitalvet_app/widgets/custom_text_field.dart';
+import 'package:vitalvet_app/widgets/templates/custom_text_field.dart';
 
-import '../constants/constants.dart';
-import '../widgets/custom_date_picker.dart';
+import '../utils/constants.dart';
+import '../widgets/templates/custom_date_picker.dart';
 
 class EditPetView extends StatelessWidget {
   final fieldsControllers = List.generate(6, (_) => TextEditingController());

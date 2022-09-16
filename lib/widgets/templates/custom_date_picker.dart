@@ -82,9 +82,19 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
   }
 
   _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now();
+    if (_textController.text.isNotEmpty) {
+      final birthdayData = _textController.text.split('/');
+      initialDate = DateTime(
+        int.parse(birthdayData[2]),
+        int.parse(birthdayData[1]),
+        int.parse(birthdayData[0]),
+      );
+    }
+
     DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime(1800),
       lastDate: DateTime(2100),
     );

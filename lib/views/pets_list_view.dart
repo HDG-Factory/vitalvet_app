@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vitalvet_app/constants/constants.dart';
-import 'package:vitalvet_app/widgets/search_bar.dart';
+import 'package:vitalvet_app/utils/constants.dart';
+import 'package:vitalvet_app/widgets/templates/search_bar.dart';
 
 import '../utils/globals.dart';
 import '../widgets/pets_list.dart';

@@ -2,14 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pfile_picker/pfile_picker.dart';
-import 'package:vitalvet_app/constants/constants.dart';
+import 'package:vitalvet_app/utils/constants.dart';
 import 'package:vitalvet_app/utils/screen_size.dart';
-import 'package:vitalvet_app/widgets/custom_date_picker.dart';
+import 'package:vitalvet_app/widgets/templates/custom_date_picker.dart';
 
-import '../widgets/custom_screen.dart';
-import '../widgets/custom_text_field.dart';
+import '../widgets/templates/custom_screen.dart';
+import '../widgets/templates/custom_text_field.dart';
 import '../widgets/login_register_btn.dart';
-import '../widgets/text_link.dart';
+import '../widgets/templates/text_link.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);

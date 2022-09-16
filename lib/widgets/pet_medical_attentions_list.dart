@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vitalvet_app/widgets/list_viewer.dart';
+import 'package:vitalvet_app/widgets/templates/list_viewer.dart';
 
 import '../blocs/pets/pets_list/pets_list_bloc.dart';
-import '../constants/constants.dart';
+import '../utils/constants.dart';
 
 class PetMedicalAttentionsList extends StatelessWidget {
   const PetMedicalAttentionsList({Key? key}) : super(key: key);

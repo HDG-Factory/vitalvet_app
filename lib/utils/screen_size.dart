@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants/constants.dart';
+import 'constants.dart';
 
 bool get isPortrait => ScreenSize.orientation == Orientation.portrait;
 
