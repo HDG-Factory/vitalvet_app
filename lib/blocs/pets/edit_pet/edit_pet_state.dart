@@ -9,7 +9,11 @@ abstract class EditPetState extends Equatable {
 
 class EditPetInitial extends EditPetState {}
 
-class EditPetError extends EditPetState {}
+class EditPetError extends EditPetState {
+  final String? error;
+
+  const EditPetError({this.error});
+}
 
 class EditingPet extends EditPetState {}
 

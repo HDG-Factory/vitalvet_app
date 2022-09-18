@@ -93,8 +93,6 @@ class _PetViewState extends State<PetView> {
   }
 
   void _saveBtnConfig() {
-    // Globals.saveBtnVisible = true;
-    // Globals.onPressed = onSaveBtnPressed;
     BlocProvider.of<TitleBarBloc>(context).add(ChangeTitleBarEvent(onPressed: onSaveBtnPressed));
   }
 
@@ -158,7 +156,15 @@ class _PetViewState extends State<PetView> {
           BlocListener<AddPetBloc, AddPetState>(
             listener: (context, state) {
               if (state is PetAdded) {
+                _hideSnackBarMessage(context);
+                _showSnackBarMessage(context, message: 'Mascota agregada correctamente', seconds: 2, loading: false);
                 Navigator.pop(context);
+              } else if (state is AddPetError) {
+                _hideSnackBarMessage(context);
+                String errorMessage = state.error != null ? state.error! : 'Error al intentar agregar la mascota';
+                _showSnackBarMessage(context, message: errorMessage, seconds: 2, loading: false);
+              } else if (state is AddingPet) {
+                _showSnackBarMessage(context, message: 'Agregando mascota...', seconds: 100, loading: true);
               }
             },
           ),
@@ -166,7 +172,15 @@ class _PetViewState extends State<PetView> {
           BlocListener<EditPetBloc, EditPetState>(
             listener: (context, state) {
               if (state is PetEdited) {
+                _hideSnackBarMessage(context);
+                _showSnackBarMessage(context, message: 'Mascota editada correctamente', seconds: 2, loading: false);
                 Navigator.pop(context);
+              } else if (state is EditPetError) {
+                _hideSnackBarMessage(context);
+                String errorMessage = state.error != null ? state.error! : 'Error al intentar editar la mascota';
+                _showSnackBarMessage(context, message: errorMessage, seconds: 2, loading: false);
+              } else if (state is EditingPet) {
+                _showSnackBarMessage(context, message: 'Editando mascota...', seconds: 100, loading: true);
               }
             },
           ),
@@ -182,19 +196,49 @@ class _PetViewState extends State<PetView> {
     );
   }
 
-  Center _body() {
-    return Center(
-      child: SingleChildScrollView(
+  void _showSnackBarMessage(BuildContext context, {required String message, required int seconds, required bool loading}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(message),
+            const SizedBox(
+              width: 100,
+            ),
+            if (loading)
+              const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
+        duration: Duration(seconds: seconds),
+      ),
+    );
+  }
+
+  void _hideSnackBarMessage(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  }
+
+  Widget _body() {
+    return SingleChildScrollView(
+      child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             _petForm(
               leftWidgets: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage(
-                    'assets/cat.jpg',
+                Padding(
+                  padding: (isSmallScreen) ? const EdgeInsets.only(top: 30.0) : const EdgeInsets.all(0),
+                  child: const CircleAvatar(
+                    backgroundImage: AssetImage(
+                      'assets/cat.jpg',
+                    ),
+                    radius: 120,
                   ),
-                  radius: 120,
                 ),
                 const SizedBox(height: 30),
                 CustomTextField(
@@ -250,15 +294,41 @@ class _PetViewState extends State<PetView> {
                 if (actions != null) ...actions!,
               ],
             ),
-            _imagesGridView(
-              children: List.generate(
-                12,
+            _imagesGridView(children: [
+              ...List.generate(
+                3,
                 (index) => Container(
-                  color: Colors.grey.withOpacity(0.1),
-                  child: Image.asset('assets/shiba_inu.png'),
+                  color: Colors.grey.shade300,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.asset('assets/shiba_inu.png'),
+                  ),
                 ),
               ),
-            ),
+              ...List.generate(
+                5,
+                (index) => Container(
+                  color: Colors.grey.shade300,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.asset('assets/cat.jpg'),
+                  ),
+                ),
+              ),
+              ...List.generate(
+                4,
+                (index) => Container(
+                  color: Colors.grey.shade300,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.asset('assets/shiba_inu.png'),
+                  ),
+                ),
+              ),
+            ]),
           ],
         ),
       ),
@@ -266,53 +336,103 @@ class _PetViewState extends State<PetView> {
   }
 
   Padding _petForm({List<Widget>? leftWidgets, List<Widget>? rightWidgets}) {
+    double verticalPadding = (100.hb - titleBarHeight - 550) / 2;
+    if (verticalPadding < 25) verticalPadding = 25;
+
     return Padding(
-      padding: const EdgeInsets.all(100.0),
+      padding: (isLargeOrMoreScreen)
+          ? EdgeInsets.symmetric(vertical: verticalPadding)
+          : (isMediumOrMoreScreen)
+              ? EdgeInsets.symmetric(horizontal: 5.0.wb, vertical: verticalPadding)
+              : EdgeInsets.symmetric(horizontal: 5.0.wb, vertical: 24),
       child: Container(
-        height: 93.5.hb - 200,
+        width: (isLargeOrMoreScreen) ? 1000.0 : null,
+        height: (isMediumOrMoreScreen) ? 550 : (810 + (25.0 * actions!.length)),
         decoration: BoxDecoration(
           color: Colors.blue.withOpacity(0.3),
           borderRadius: const BorderRadius.all(Radius.circular(18)),
         ),
-        child: Form(
-          key: formKey,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: const [0, 0.9, 1],
-                    colors: [
-                      Colors.blue.withOpacity(0.8),
-                      Colors.blue.withOpacity(0.68),
-                      Colors.blue.withOpacity(0),
+        child: FocusTraversalGroup(
+          policy: WidgetOrderTraversalPolicy(),
+          child: Form(
+            key: formKey,
+            child: (isMediumOrMoreScreen)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: const [0, 0.9, 1],
+                            colors: [
+                              Colors.blue.withOpacity(0.8),
+                              Colors.blue.withOpacity(0.68),
+                              Colors.blue.withOpacity(0),
+                            ],
+                          ),
+                        ),
+                        width: 30.wb,
+                        child: Padding(
+                          padding: (isMediumScreen) ? const EdgeInsets.symmetric(horizontal: 20.0) : const EdgeInsets.symmetric(horizontal: 50.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: leftWidgets!,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: (isMediumScreen) ? const EdgeInsets.symmetric(horizontal: 20.0) : const EdgeInsets.symmetric(horizontal: 50.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: rightWidgets!,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: const [0, 0.9, 1],
+                            colors: [
+                              Colors.blue.withOpacity(0.8),
+                              Colors.blue.withOpacity(0.68),
+                              Colors.blue.withOpacity(0),
+                            ],
+                          ),
+                        ),
+                        width: 30.wb,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: leftWidgets!,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: rightWidgets!,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                width: 30.wb,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: leftWidgets!,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: rightWidgets!,
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
@@ -321,14 +441,19 @@ class _PetViewState extends State<PetView> {
 
   Widget _imagesGridView({List<Widget>? children}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 150.0, vertical: 100.0),
+      padding: (isLargeOrMoreScreen) ? const EdgeInsets.symmetric(vertical: 100.0) : EdgeInsets.symmetric(horizontal: 12.0.wb, vertical: 100.0),
       child: SizedBox(
+        width: (isLargeOrMoreScreen) ? 900.0 : null,
         height: 94.78.hb - 200,
         child: GridView.count(
           childAspectRatio: 2,
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
-          crossAxisCount: 4,
+          crossAxisCount: (isLargeOrMoreScreen)
+              ? 4
+              : (isMediumOrMoreScreen)
+                  ? 2
+                  : 1,
           children: [
             ...children!,
             Container(

@@ -9,15 +9,8 @@ part 'edit_pet_state.dart';
 class EditPetBloc extends Bloc<EditPetEvent, EditPetState> {
   EditPetBloc() : super(EditPetInitial()) {
     on<EditCreatedPetEvent>((event, emit) async {
-      if (event.id == null ||
-          event.name == null ||
-          event.name!.isEmpty ||
-          event.weight == null ||
-          event.weight!.isEmpty ||
-          event.birthday == null ||
-          event.birthday!.isEmpty ||
-          event.ownerId == null) {
-        emit(EditPetError());
+      final allFieldsExist = checkRequiredFields(event, emit);
+      if (allFieldsExist == false) {
         return;
       }
 
@@ -70,10 +63,10 @@ class EditPetBloc extends Bloc<EditPetEvent, EditPetState> {
 
       emit(EditingPet());
       await PatientApiService().updatePatient(patientId, patientData).then((response) async {
-        if (response.statusCode == 201) {
+        if (response.statusCode == 200) {
           emit(PetEdited());
         } else {
-          emit(EditPetError());
+          emit(const EditPetError(error: 'Error al intentar editar la mascota'));
         }
         print(response);
       });
@@ -88,20 +81,20 @@ class EditPetBloc extends Bloc<EditPetEvent, EditPetState> {
         if (response.statusCode == 200) {
           speciesList = response.data;
         } else {
-          emit(EditPetError());
+          emit(const EditPetError(error: 'Error al intentar mostrar las especies'));
           return false;
         }
       });
 
       String? subspeciesName = event.newSubspeciesName;
       if (subspeciesName == null || subspeciesName.isEmpty) {
-        emit(EditPetError());
+        emit(const EditPetError(error: 'Debe ingresar el nombre de la raza'));
         return false;
       }
       if (speciesId == null) {
         String? speciesName = event.newSpeciesName;
         if (speciesName == null || speciesName.isEmpty) {
-          emit(EditPetError());
+          emit(const EditPetError(error: 'Debe ingresar el nombre de la especie'));
           return false;
         }
 
@@ -119,7 +112,7 @@ class EditPetBloc extends Bloc<EditPetEvent, EditPetState> {
             if (response.statusCode == 201) {
               speciesId = response.data['id'];
             } else {
-              emit(EditPetError());
+              emit(const EditPetError(error: 'Error al intentar registrar la especie'));
               return false;
             }
           });
@@ -140,7 +133,7 @@ class EditPetBloc extends Bloc<EditPetEvent, EditPetState> {
           if (response.statusCode == 201) {
             subspeciesId = response.data['id'];
           } else {
-            emit(EditPetError());
+            emit(const EditPetError(error: 'Error al intentar registrar la raza'));
             return false;
           }
         });
@@ -150,5 +143,29 @@ class EditPetBloc extends Bloc<EditPetEvent, EditPetState> {
       speciesId,
       subspeciesId,
     ];
+  }
+
+  bool checkRequiredFields(EditCreatedPetEvent event, Emitter<EditPetState> emit) {
+    if (event.id == null) {
+      emit(const EditPetError(error: 'La mascota editada no es válida'));
+      return false;
+    }
+    if (event.name == null || event.name!.isEmpty) {
+      emit(const EditPetError(error: 'El nombre de la mascota es obligatorio'));
+      return false;
+    }
+    if (event.weight == null || event.weight!.isEmpty) {
+      emit(const EditPetError(error: 'El peso de la mascota es obligatorio'));
+      return false;
+    }
+    if (event.birthday == null || event.birthday!.isEmpty) {
+      emit(const EditPetError(error: 'La fecha de nacimiento de la mascota es obligatoria'));
+      return false;
+    }
+    if (event.ownerId == null) {
+      emit(const EditPetError(error: 'Debe seleccionar el tutor de la mascota'));
+      return false;
+    }
+    return true;
   }
 }

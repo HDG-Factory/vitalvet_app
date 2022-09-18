@@ -24,7 +24,9 @@ class PetsList extends StatelessWidget {
         return ListViewer(
           items: pets,
           onItemTap: (item) {
-            Navigator.pushNamed(context, '$HOME_ROUTE/$PETS_LIST_VIEW_ROUTE/$EDIT_PET_VIEW_ROUTE', arguments: item['id']);
+            Navigator.pushNamed(context, '$HOME_ROUTE/$PETS_LIST_VIEW_ROUTE/$EDIT_PET_VIEW_ROUTE', arguments: item['id']).then((value) {
+              BlocProvider.of<PetsListBloc>(context).add(LoadPetsListEvent());
+            });
           },
           tileTemplate: (item, onTap) {
             return ListTile(

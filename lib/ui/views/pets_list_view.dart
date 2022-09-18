@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitalvet_app/blocs/pets/pets_list/pets_list_bloc.dart';
 import 'package:vitalvet_app/utils/constants.dart';
 import 'package:vitalvet_app/ui/widgets/templates/search_bar.dart';
 import 'package:vitalvet_app/utils/globals.dart';
@@ -28,7 +29,9 @@ class PetsListView extends StatelessWidget {
               child: SearchBar(
                 withWidget: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '$HOME_ROUTE/$PETS_LIST_VIEW_ROUTE/$ADD_PET_VIEW_ROUTE');
+                    Navigator.pushNamed(context, '$HOME_ROUTE/$PETS_LIST_VIEW_ROUTE/$ADD_PET_VIEW_ROUTE').then((value) {
+                      BlocProvider.of<PetsListBloc>(context).add(LoadPetsListEvent());
+                    });
                   },
                   child: const Text('Agregar'),
                 ),

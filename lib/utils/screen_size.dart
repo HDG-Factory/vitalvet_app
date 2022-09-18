@@ -5,8 +5,10 @@ import 'constants.dart';
 bool get isPortrait => ScreenSize.orientation == Orientation.portrait;
 
 bool get isSmallScreen => ScreenSize._screenWidth < MEDIUM_BREAKPOINT;
+bool get isMediumScreen => ScreenSize._screenWidth >= MEDIUM_BREAKPOINT && ScreenSize._screenWidth < LARGE_BREAKPOINT;
 bool get isMediumOrMoreScreen => ScreenSize._screenWidth >= MEDIUM_BREAKPOINT;
 bool get isLargeOrMoreScreen => ScreenSize._screenWidth >= LARGE_BREAKPOINT;
+int get titleBarHeight => 50;
 
 void forceRerender(context) {
   MediaQuery.of(context);
@@ -40,8 +42,7 @@ class ScreenSize {
     if (_screenWidth < MEDIUM_BREAKPOINT) {
       screenSizePoint = SMALL_SCREEN_SIZE;
       // print('small');
-    } else if (_screenWidth >= MEDIUM_BREAKPOINT &&
-        _screenWidth < LARGE_BREAKPOINT) {
+    } else if (_screenWidth >= MEDIUM_BREAKPOINT && _screenWidth < LARGE_BREAKPOINT) {
       screenSizePoint = MEDIUM_SCREEN_SIZE;
       // print('medium');
     } else if (_screenWidth >= LARGE_BREAKPOINT) {

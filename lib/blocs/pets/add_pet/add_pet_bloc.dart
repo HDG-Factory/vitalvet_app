@@ -9,14 +9,8 @@ part 'add_pet_state.dart';
 class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
   AddPetBloc() : super(AddPetInitial()) {
     on<AddNewPetEvent>((event, emit) async {
-      if (event.name == null ||
-          event.name!.isEmpty ||
-          event.weight == null ||
-          event.weight!.isEmpty ||
-          event.birthday == null ||
-          event.birthday!.isEmpty ||
-          event.ownerId == null) {
-        emit(AddPetError());
+      final allFieldsExist = checkRequiredFields(event, emit);
+      if (allFieldsExist == false) {
         return;
       }
 
@@ -70,35 +64,35 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
         if (response.statusCode == 201) {
           emit(PetAdded());
         } else {
-          emit(AddPetError());
+          emit(const AddPetError(error: 'Error al intentar registrar la mascota'));
         }
         print(response);
       });
     });
   }
 
-  dynamic ensureSpeciesAndSubspeciesExist(int? speciesId, int? subspeciesId, event, emit) async {
-    dynamic? speciesCreated;
+  dynamic ensureSpeciesAndSubspeciesExist(int? speciesId, int? subspeciesId, AddNewPetEvent event, Emitter<AddPetState> emit) async {
+    dynamic speciesCreated;
     if (subspeciesId == null) {
       List<dynamic>? speciesList;
       await SpeciesApiService().getAllSpeciesWithSubspecies().then((response) async {
         if (response.statusCode == 200) {
           speciesList = response.data;
         } else {
-          emit(AddPetError());
+          emit(const AddPetError(error: 'Error al intentar mostrar las especies'));
           return false;
         }
       });
 
       String? subspeciesName = event.newSubspeciesName;
       if (subspeciesName == null || subspeciesName.isEmpty) {
-        emit(AddPetError());
+        emit(const AddPetError(error: 'Debe ingresar el nombre de la raza'));
         return false;
       }
       if (speciesId == null) {
         String? speciesName = event.newSpeciesName;
         if (speciesName == null || speciesName.isEmpty) {
-          emit(AddPetError());
+          emit(const AddPetError(error: 'Debe ingresar el nombre de la especie'));
           return false;
         }
 
@@ -116,14 +110,14 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
             if (response.statusCode == 201) {
               speciesId = response.data['id'];
             } else {
-              emit(AddPetError());
+              emit(const AddPetError(error: 'Error al intentar registrar la especie'));
               return false;
             }
           });
         }
       }
 
-      dynamic? subspeciesCreated;
+      dynamic subspeciesCreated;
       if (speciesCreated != null) {
         subspeciesCreated = speciesCreated['subspecies'].firstWhere((subspecies) => subspecies['name'] == subspeciesName, orElse: () => null);
       }
@@ -137,7 +131,7 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
           if (response.statusCode == 201) {
             subspeciesId = response.data['id'];
           } else {
-            emit(AddPetError());
+            emit(const AddPetError(error: 'Error al intentar registrar la raza'));
             return false;
           }
         });
@@ -147,5 +141,25 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
       speciesId,
       subspeciesId,
     ];
+  }
+
+  bool checkRequiredFields(AddNewPetEvent event, Emitter<AddPetState> emit) {
+    if (event.name == null || event.name!.isEmpty) {
+      emit(const AddPetError(error: 'El nombre de la mascota es obligatorio'));
+      return false;
+    }
+    if (event.weight == null || event.weight!.isEmpty) {
+      emit(const AddPetError(error: 'El peso de la mascota es obligatorio'));
+      return false;
+    }
+    if (event.birthday == null || event.birthday!.isEmpty) {
+      emit(const AddPetError(error: 'La fecha de nacimiento de la mascota es obligatoria'));
+      return false;
+    }
+    if (event.ownerId == null) {
+      emit(const AddPetError(error: 'Debe seleccionar el tutor de la mascota'));
+      return false;
+    }
+    return true;
   }
 }

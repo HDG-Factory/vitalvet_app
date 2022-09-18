@@ -5,13 +5,10 @@ class CustomDatePicker extends StatefulWidget {
   final String? labelText;
   final String? Function(String?)? validator;
 
-  const CustomDatePicker(
-      {Key? key, this.labelText, this.validator, this.fieldController})
-      : super(key: key);
+  const CustomDatePicker({Key? key, this.labelText, this.validator, this.fieldController}) : super(key: key);
 
   @override
-  State<CustomDatePicker> createState() =>
-      _CustomDatePickerState(validator, fieldController);
+  State<CustomDatePicker> createState() => _CustomDatePickerState(validator, fieldController);
 }
 
 class _CustomDatePickerState extends State<CustomDatePicker> {
@@ -20,10 +17,11 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
   final String? Function(String?)? _validator;
   final date = '';
   late TextEditingController _textController;
-  final Color _borderColor = Colors.blue.withOpacity(0.7);
-  final BorderRadius _borderRadius = BorderRadius.circular(20.0);
-  final double _borderWidth = 1.5;
-  final double _borderPadding = 1.5;
+  late String lastDate;
+  Color _borderColor = Colors.blue.withOpacity(0.7);
+  BorderRadius _borderRadius = BorderRadius.circular(20.0);
+  double _borderWidth = 1.5;
+  double _borderPadding = 1.5;
 
   _CustomDatePickerState(this._validator, this.fieldController);
 
@@ -31,12 +29,15 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
   void initState() {
     super.initState();
     _textController = fieldController ?? TextEditingController();
+    lastDate = _textController.text;
 
     fieldFocusNode.addListener(() {
-      if (fieldFocusNode.hasFocus) {
-        _selectDate(context);
-        fieldFocusNode.unfocus();
-      }
+      setState(() {
+        _borderColor = fieldFocusNode.hasFocus ? Colors.blue : Colors.blue.withOpacity(0.7);
+        _borderRadius = fieldFocusNode.hasFocus ? BorderRadius.circular(21.0) : BorderRadius.circular(20.0);
+        _borderWidth = fieldFocusNode.hasFocus ? 3 : 1.5;
+        _borderPadding = fieldFocusNode.hasFocus ? 0 : 1.5;
+      });
     });
   }
 
@@ -56,6 +57,12 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         controller: _textController,
         validator: _validator,
         enableInteractiveSelection: false,
+        onChanged: (value) {
+          setState(() {
+            _textController.text = lastDate;
+            _selectDate(context);
+          });
+        },
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
@@ -74,7 +81,6 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
           ),
         ),
         onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
           _selectDate(context);
         },
       ),
@@ -101,9 +107,9 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 
     if (picked != null) {
       setState(() {
-        // _textController.text = picked.toString();
-        _textController.text =
-            '${picked.day} / ${picked.month} / ${picked.year}';
+        String returnedDate = '${picked.day} / ${picked.month} / ${picked.year}';
+        _textController.text = returnedDate;
+        lastDate = returnedDate;
       });
     }
   }

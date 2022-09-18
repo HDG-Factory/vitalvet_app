@@ -49,25 +49,28 @@ class _SideBarState extends State<SideBar> {
                   mouseEntered = false;
                 });
               },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _appIconBtn(sideBarExtensionBloc, extended),
-                  Expanded(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: _getItems(topItems, 0, isExtended),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: _getItems(bottomItems, 2, isExtended),
-                      ),
-                    ],
-                  )),
-                ],
+              child: FocusTraversalGroup(
+                policy: WidgetOrderTraversalPolicy(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _appIconBtn(sideBarExtensionBloc, extended),
+                    Expanded(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: _getItems(topItems, 0, isExtended),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: _getItems(bottomItems, 2, isExtended),
+                        ),
+                      ],
+                    )),
+                  ],
+                ),
               ),
             ),
           );
@@ -82,11 +85,9 @@ class _SideBarState extends State<SideBar> {
         height: 30,
         child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, anim) =>
-                FadeTransition(opacity: anim, child: child),
+            transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
             child: !mouseEntered
-                ? SvgPicture.asset('assets/vitalvet_icon.svg',
-                    height: 30, width: 30)
+                ? SvgPicture.asset('assets/vitalvet_icon.svg', height: 30, width: 30)
                 : AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     transitionBuilder: (child, anim) => RotationTransition(
@@ -95,10 +96,8 @@ class _SideBarState extends State<SideBar> {
                             : Tween<double>(begin: 0.75, end: 1).animate(anim),
                         child: FadeTransition(opacity: anim, child: child)),
                     child: !extended
-                        ? const Icon(Icons.keyboard_double_arrow_down,
-                            key: ValueKey('icon2'))
-                        : const Icon(Icons.keyboard_double_arrow_left,
-                            key: ValueKey('icon3')),
+                        ? const Icon(Icons.keyboard_double_arrow_down, key: ValueKey('icon2'))
+                        : const Icon(Icons.keyboard_double_arrow_left, key: ValueKey('icon3')),
                   )),
       ),
       onPressed: () {
@@ -107,8 +106,7 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-  List<Widget> _getItems(
-      List<List<Object>> list, int startIndex, bool extended) {
+  List<Widget> _getItems(List<List<Object>> list, int startIndex, bool extended) {
     List<MyNavigationRailFab> items = [];
 
     for (int i = 0; i < list.length; i++) {
@@ -120,8 +118,7 @@ class _SideBarState extends State<SideBar> {
         extended: extended,
         selected: currentRoute == SIDE_BAR_VIEWS_ROUTES[index],
         onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(context,
-              '$HOME_ROUTE/${SIDE_BAR_VIEWS_ROUTES[index]}', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, '$HOME_ROUTE/${SIDE_BAR_VIEWS_ROUTES[index]}', (route) => false);
         },
       ));
       startIndex++;
@@ -165,14 +162,7 @@ class MyNavigationRailFab extends StatelessWidget {
   final String? route;
   final bool? selected;
 
-  const MyNavigationRailFab(
-      {super.key,
-      this.text,
-      this.route,
-      this.onPressed,
-      this.icon,
-      this.extended,
-      this.selected});
+  const MyNavigationRailFab({super.key, this.text, this.route, this.onPressed, this.icon, this.extended, this.selected});
 
   @override
   Widget build(BuildContext context) {

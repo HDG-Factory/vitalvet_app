@@ -9,7 +9,11 @@ abstract class AddPetState extends Equatable {
 
 class AddPetInitial extends AddPetState {}
 
-class AddPetError extends AddPetState {}
+class AddPetError extends AddPetState {
+  final String? error;
+
+  const AddPetError({this.error});
+}
 
 class AddingPet extends AddPetState {}
 
