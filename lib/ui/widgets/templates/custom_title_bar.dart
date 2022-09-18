@@ -1,0 +1,130 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalvet_app/blocs/title_bar/title_bar_bloc.dart';
+
+class CustomTitleBar extends StatefulWidget with PreferredSizeWidget {
+  final bool? isHomeRoute;
+
+  const CustomTitleBar({Key? key, this.isHomeRoute}) : super(key: key);
+
+  @override
+  State<CustomTitleBar> createState() => CustomTitleBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(50.0);
+}
+
+class CustomTitleBarState extends State<CustomTitleBar> {
+  final String title = 'Vitalvet';
+
+  // @override
+  // void initState() {
+  //   Globals.updateSaveBtn = updateSaveBtn;
+  //   super.initState();
+  // }
+
+  // void updateSaveBtn(visible, callback) {
+  //   setState(() {
+  //     Globals.saveBtnVisible = visible;
+  //     Globals.onPressed = callback;
+  //   });
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      flexibleSpace: SizedBox(
+        height: double.infinity,
+        child: Row(
+          children: [
+            Expanded(
+              child: MoveWindow(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 70),
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: widget.isHomeRoute != null
+                          ? Center(
+                              child: BlocBuilder<TitleBarBloc, VoidCallback?>(
+                                builder: (context, VoidCallback? onPressFunc) {
+                                  return Visibility(
+                                    visible: onPressFunc != null,
+                                    child: ElevatedButton(
+                                      onPressed: onPressFunc,
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.white,
+                                        onPrimary: Colors.blue,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Text('Guardar'),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          : const SizedBox(),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            const WindowButtons(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WindowButtons extends StatefulWidget {
+  const WindowButtons({Key? key}) : super(key: key);
+
+  @override
+  State<WindowButtons> createState() => _WindowButtonsState();
+}
+
+class _WindowButtonsState extends State<WindowButtons> {
+  void maximizeOrRestore() {
+    setState(() {
+      appWindow.maximizeOrRestore();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double height = 50;
+
+    return Row(
+      children: [
+        SizedBox(
+          width: height,
+          height: height,
+          child: MinimizeWindowButton(),
+        ),
+        SizedBox(
+          width: height,
+          height: height,
+          child: appWindow.isMaximized ? RestoreWindowButton(onPressed: maximizeOrRestore) : MaximizeWindowButton(onPressed: maximizeOrRestore),
+        ),
+        SizedBox(
+          width: height,
+          height: height,
+          child: CloseWindowButton(),
+        ),
+      ],
+    );
+  }
+}

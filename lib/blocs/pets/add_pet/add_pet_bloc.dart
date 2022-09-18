@@ -21,47 +21,16 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
       }
 
       int? subspeciesId = event.subspeciesId;
-      if (subspeciesId == null) {
-        String? subspeciesName = event.newSubspeciesName;
-        if (subspeciesName == null || subspeciesName.isEmpty) {
-          emit(AddPetError());
-          return;
-        }
-        int? speciesId = event.speciesId;
-        if (speciesId == null) {
-          String? speciesName = event.newSpeciesName;
-          if (speciesName == null || speciesName.isEmpty) {
-            emit(AddPetError());
-            return;
-          }
-
-          final speciesData = {
-            'name': speciesName,
-          };
-
-          await SpeciesApiService().createSpecies(speciesData).then((response) async {
-            if (response.statusCode == 201) {
-              speciesId = response.data['id'];
-            } else {
-              emit(AddPetError());
-            }
-          });
-        }
-
-        final subspeciesData = {
-          'name': subspeciesName,
-        };
-        await SpeciesApiService().createSubspecies(speciesId!, subspeciesData).then((response) async {
-          if (response.statusCode == 201) {
-            subspeciesId = response.data['id'];
-          } else {
-            emit(AddPetError());
-          }
-        });
+      int? speciesId = event.speciesId;
+      final result = await ensureSpeciesAndSubspeciesExist(speciesId, subspeciesId, event, emit);
+      if (result == false) {
+        return;
       }
+      speciesId = result[0];
+      subspeciesId = result[1];
 
       String? formattedBirthday;
-      if (event.birthday != null) {
+      if (event.birthday != null && event.birthday!.isNotEmpty) {
         final birthdayData = event.birthday!.split('/');
         DateTime birthdayDate = DateTime(
           int.parse(birthdayData[2]),
@@ -72,7 +41,7 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
       }
 
       String? formattedDateOfDeath;
-      if (event.dateOfDeath != null) {
+      if (event.dateOfDeath != null && event.dateOfDeath!.isNotEmpty) {
         final dayOfDeathData = event.dateOfDeath!.split('/');
         DateTime dayOfDeathDate = DateTime(
           int.parse(dayOfDeathData[2]),
@@ -82,12 +51,16 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
         formattedDateOfDeath = dayOfDeathDate.toString().split(' ')[0];
       }
 
+      String name = event.name!.trim();
+      double weight = double.parse(event.weight!);
+      String? mainPicture = (event.mainPicture != null && event.mainPicture!.isNotEmpty) ? event.mainPicture!.trim() : null;
+
       final patientData = {
-        'name': event.name,
-        'weight': double.parse(event.weight!),
+        'name': name,
+        'weight': weight,
         'birthday': formattedBirthday,
         'dateOfDeath': formattedDateOfDeath,
-        'mainPicture': event.mainPicture,
+        'mainPicture': mainPicture,
         'subspeciesId': subspeciesId,
         'ownerId': event.ownerId,
       };
@@ -102,5 +75,77 @@ class AddPetBloc extends Bloc<AddPetEvent, AddPetState> {
         print(response);
       });
     });
+  }
+
+  dynamic ensureSpeciesAndSubspeciesExist(int? speciesId, int? subspeciesId, event, emit) async {
+    dynamic? speciesCreated;
+    if (subspeciesId == null) {
+      List<dynamic>? speciesList;
+      await SpeciesApiService().getAllSpeciesWithSubspecies().then((response) async {
+        if (response.statusCode == 200) {
+          speciesList = response.data;
+        } else {
+          emit(AddPetError());
+          return false;
+        }
+      });
+
+      String? subspeciesName = event.newSubspeciesName;
+      if (subspeciesName == null || subspeciesName.isEmpty) {
+        emit(AddPetError());
+        return false;
+      }
+      if (speciesId == null) {
+        String? speciesName = event.newSpeciesName;
+        if (speciesName == null || speciesName.isEmpty) {
+          emit(AddPetError());
+          return false;
+        }
+
+        speciesCreated = speciesList!.firstWhere((species) {
+          return species['name'] == speciesName;
+        }, orElse: () => null);
+        if (speciesCreated != null) {
+          speciesId = speciesCreated['id'];
+        } else {
+          final speciesData = {
+            'name': speciesName,
+          };
+
+          await SpeciesApiService().createSpecies(speciesData).then((response) async {
+            if (response.statusCode == 201) {
+              speciesId = response.data['id'];
+            } else {
+              emit(AddPetError());
+              return false;
+            }
+          });
+        }
+      }
+
+      dynamic? subspeciesCreated;
+      if (speciesCreated != null) {
+        subspeciesCreated = speciesCreated['subspecies'].firstWhere((subspecies) => subspecies['name'] == subspeciesName, orElse: () => null);
+      }
+      if (subspeciesCreated != null) {
+        subspeciesId = subspeciesCreated['id'];
+      } else {
+        final subspeciesData = {
+          'name': subspeciesName,
+        };
+        await SpeciesApiService().createSubspecies(speciesId!, subspeciesData).then((response) async {
+          if (response.statusCode == 201) {
+            subspeciesId = response.data['id'];
+          } else {
+            emit(AddPetError());
+            return false;
+          }
+        });
+      }
+    }
+    return [
+      speciesId,
+      subspeciesId,
+    ];
   }
 }

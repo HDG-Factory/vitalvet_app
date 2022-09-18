@@ -9,6 +9,8 @@ abstract class GetOwnerState extends Equatable {
 
 class GetOwnerInitial extends GetOwnerState {}
 
+class LoadOwnerError extends GetOwnerState {}
+
 class LoadingOwner extends GetOwnerState {}
 
 class OwnerLoaded extends GetOwnerState {

@@ -4,24 +4,26 @@ import 'package:vitalvet_app/blocs/account/account_bloc.dart';
 import 'package:vitalvet_app/blocs/owners/delete_owner/delete_owner_bloc.dart';
 import 'package:vitalvet_app/blocs/owners/owners_list/owners_list_bloc.dart';
 import 'package:vitalvet_app/blocs/pets/add_pet/add_pet_bloc.dart';
+import 'package:vitalvet_app/blocs/pets/edit_pet/edit_pet_bloc.dart';
+import 'package:vitalvet_app/blocs/pets/get_pet/get_pet_bloc.dart';
 import 'package:vitalvet_app/blocs/side_bar/extension/side_bar_extension_bloc.dart';
 import 'package:vitalvet_app/blocs/species/species_list/species_list_bloc.dart';
+import 'package:vitalvet_app/blocs/title_bar/title_bar_bloc.dart';
 import 'package:vitalvet_app/utils/constants.dart';
-import 'package:vitalvet_app/screens/home_screen.dart';
-import 'package:vitalvet_app/screens/login_screen.dart';
-import 'package:vitalvet_app/screens/register_screen.dart';
-import 'package:vitalvet_app/screens/start_screen.dart';
-import 'package:vitalvet_app/views/add_pet_view.dart';
-import 'package:vitalvet_app/views/pet_medical_attention_view.dart';
-import 'package:vitalvet_app/views/pet_medical_history_view.dart';
-import 'package:vitalvet_app/views/profile_view.dart';
-import 'package:vitalvet_app/views/settings_view.dart';
-
-import '../blocs/pets/pets_list/pets_list_bloc.dart';
-import '../views/calendar_view.dart';
-import '../views/edit_pet_view.dart';
-import '../views/not_found_view.dart';
-import '../views/pets_list_view.dart';
+import 'package:vitalvet_app/ui/screens/home_screen.dart';
+import 'package:vitalvet_app/ui/screens/login_screen.dart';
+import 'package:vitalvet_app/ui/screens/register_screen.dart';
+import 'package:vitalvet_app/ui/screens/start_screen.dart';
+import 'package:vitalvet_app/ui/views/pet_views/add_pet_view.dart';
+import 'package:vitalvet_app/ui/views/pet_medical_attention_view.dart';
+import 'package:vitalvet_app/ui/views/pet_medical_history_view.dart';
+import 'package:vitalvet_app/ui/views/profile_view.dart';
+import 'package:vitalvet_app/ui/views/settings_view.dart';
+import 'package:vitalvet_app/blocs/pets/pets_list/pets_list_bloc.dart';
+import 'package:vitalvet_app/ui/views/calendar_view.dart';
+import 'package:vitalvet_app/ui/views/pet_views/edit_pet_view.dart';
+import 'package:vitalvet_app/ui/views/not_found_view.dart';
+import 'package:vitalvet_app/ui/views/pets_list_view.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -47,6 +49,9 @@ class AppRouter {
             providers: [
               BlocProvider<SideBarExtensionBloc>(
                 create: (_) => SideBarExtensionBloc(),
+              ),
+              BlocProvider<TitleBarBloc>(
+                create: (_) => TitleBarBloc(),
               ),
             ],
             child: HomeScreen(
@@ -80,7 +85,33 @@ class AppRouter {
                         ),
                       );
                     case EDIT_PET_VIEW_ROUTE:
-                      return EditPetView();
+                      final editPetBloc = EditPetBloc();
+                      final deleteOwnerBloc = DeleteOwnerBloc();
+
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (_) => OwnersListBloc(),
+                          ),
+                          BlocProvider(
+                            create: (_) => deleteOwnerBloc,
+                          ),
+                          BlocProvider(
+                            create: (_) => SpeciesListBloc(),
+                          ),
+                          BlocProvider(
+                            create: (_) => editPetBloc,
+                          ),
+                          BlocProvider(
+                            create: (_) => GetPetBloc(),
+                          ),
+                        ],
+                        child: EditPetView(
+                          petId: settings.arguments as int,
+                          editPetBloc: editPetBloc,
+                          deleteOwnerBloc: deleteOwnerBloc,
+                        ),
+                      );
                     case PET_MEDICAL_HISTORY_VIEW_ROUTE:
                       return BlocProvider(
                         create: (context) => PetsListBloc(),

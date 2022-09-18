@@ -8,12 +8,19 @@ part 'get_owner_state.dart';
 class GetOwnerBloc extends Bloc<GetOwnerEvent, GetOwnerState> {
   GetOwnerBloc() : super(GetOwnerInitial()) {
     on<LoadOwnerEvent>((event, emit) async {
+      if (event.id == null) {
+        emit(LoadOwnerError());
+        return;
+      }
+
       int ownerId = event.id!;
       emit(LoadingOwner());
       await OwnerApiService().getOwnerById(ownerId).then((response) {
         if (response.statusCode == 200) {
           emit(OwnerLoaded(owner: response.data));
-        } else {}
+        } else {
+          emit(LoadOwnerError());
+        }
       });
     });
   }
