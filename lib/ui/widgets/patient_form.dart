@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vitalvet_app/ui/widgets/date_input.dart';
 import 'package:vitalvet_app/ui/widgets/dropdown_input.dart';
+import 'package:vitalvet_app/ui/widgets/vitalvet_input.dart';
 
 
 class PatientForm extends StatelessWidget {
@@ -8,6 +9,8 @@ class PatientForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> species = ['Perro', 'Gato', 'Loro', 'Conejo', 'Pez'];
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -21,17 +24,9 @@ class PatientForm extends StatelessWidget {
           ),
         ),
         DateInput(),
-        const SizedBox(
-          height: 40,
-          child: TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Peso (g)'
-            ),
-          ),
-        ),
-        DropdownInput(),
-        DropdownInput()        
+        VitalvetInput(label: 'Peso', icon: Icons.scale),
+        DropdownInput(label: 'Especie', items: species),
+        DropdownInput(label: 'Raza', items: species,)        
       ],
     );
   }

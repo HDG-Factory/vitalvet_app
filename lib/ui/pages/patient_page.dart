@@ -11,29 +11,29 @@ class PatientPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Nueva Mascota"),
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 80, vertical: 100),
+      body: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 210, vertical: 110),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,        
           children: [
             Expanded(          
               child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all()
-                ),
+                // decoration: BoxDecoration(
+                //   border: Border.all()
+                // ),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 150, vertical: 0),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                   child: PatientCard(),
                 ),
               ),
             ),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all()
-                ),
+                // decoration: BoxDecoration(
+                //   border: Border.all()
+                // ),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 150, vertical: 0),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                   child: PatientForm(),
                 ),
               ),

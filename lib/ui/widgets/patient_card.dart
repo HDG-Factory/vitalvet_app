@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitalvet_app/ui/widgets/vitalvet_input.dart';
 
 class PatientCard extends StatelessWidget {
   const PatientCard({Key? key}) : super(key: key);
@@ -12,15 +13,7 @@ class PatientCard extends StatelessWidget {
           backgroundImage: AssetImage('assets/patient_profile.jpg'),
           radius: 150,
           ),
-        SizedBox(
-          height: 40,
-          child: TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Pet name'
-            ),
-          ),
-        )
+        VitalvetInput()
       ],
     );
   }

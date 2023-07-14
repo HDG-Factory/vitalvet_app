@@ -13,12 +13,26 @@ class _DateInputState extends State<DateInput> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 60,
+      width: 280,
       child: TextField(
         controller: _date,
-        decoration: const InputDecoration(
-          icon: Icon(Icons.calendar_today_rounded),
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          suffixIcon: const Icon(Icons.calendar_today_rounded),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              width: 3,
+              color: Color.fromARGB(255, 2, 48, 66),
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              width: 3,
+              color: Color.fromARGB(255, 2, 48, 66),
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
           labelText: 'Fecha'
         ),
         onTap: () async {

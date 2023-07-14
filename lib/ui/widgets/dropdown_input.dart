@@ -1,23 +1,55 @@
 import 'package:flutter/material.dart';
 
 class DropdownInput extends StatefulWidget {
-  DropdownInput({Key? key}) : super(key: key);
+  final List<String>? items;
+  final String? label;
+  final double? iHeight;
+  final double? iWidth;
+
+  DropdownInput({
+    Key? key,
+    this.items,
+    this.label = 'Nombre', 
+    this.iHeight = 60,
+    this.iWidth = 280,
+    }) : super(key: key);
 
   @override
   State<DropdownInput> createState() => _DropdownInputState();
 }
 
 class _DropdownInputState extends State<DropdownInput> {
-  List<String> species = ['Perro', 'Gato', 'Loro', 'Conejo', 'Pez'];
-  String? selectedItem = 'Perro';
+  String? selectedItem = '';
 
   @override
   Widget build(BuildContext context) {
+    selectedItem = widget.items?[0];
+
     return SizedBox(
-      height: 40,
-      child: DropdownButton<String>(
+      height: widget.iHeight,
+      width: widget.iWidth,
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+              width: 3,
+              color: Color.fromARGB(255, 2, 48, 66),
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              width: 3,
+              color: Color.fromARGB(255, 2, 48, 66),
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          labelText: widget.label
+        ),
         value: selectedItem,
-        items: species.map((item) => DropdownMenuItem<String>(
+        focusColor: Colors.transparent,
+        borderRadius: BorderRadius.circular(14),
+        items: widget.items?.map((item) => DropdownMenuItem<String>(
           value: item,
           child: Text(item)
             ))
