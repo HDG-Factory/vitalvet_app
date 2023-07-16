@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vitalvet_app/ui/pages/medical_atttentions/register_medical_attentions.dart';
 import 'package:vitalvet_app/ui/pages/patient_page.dart';
+import 'package:vitalvet_app/ui/pages/profile/register_profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -71,6 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterMedicalAttention()));
               },
               child: const Text('Medical Attention Page'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterProfile()));
+              },
+              child: const Text('Registro de Perfil'),
             ),
           ],
         ),
