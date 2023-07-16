@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitalvet_app/ui/pages/medical_atttentions/register_medical_attentions.dart';
 import 'package:vitalvet_app/ui/pages/patient_page.dart';
 
 void main() {
@@ -52,18 +53,31 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'George, You have pushed the button this many times:',
+              'George & Doc Chocolate, You have pushed the button this many times:',
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const PatientPage()));
+              },
+              child: const Text('Patient Page'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterMedicalAttention()));
+              },
+              child: const Text('Medical Attention Page'),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         //onPressed: _incrementCounter,
-        onPressed: (){
+        onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const PatientPage()));
         },
         tooltip: 'Increment',
