@@ -22,8 +22,6 @@ class RegisterMedicalAttention extends StatelessWidget {
                     Text("Sexo"),
                     Text("Edad"),
                     Text("Peso"),
-                    Text("Color"),
-                    Text("Señas Particulares"),
                   ],
                 ),
               ),
