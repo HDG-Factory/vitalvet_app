@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vitalvet_app/ui/pages/medical_atttentions/register_medical_attentions.dart';
 import 'package:vitalvet_app/ui/pages/patient_page.dart';
-import 'package:vitalvet_app/ui/pages/profile/register_profile.dart';
+import 'package:vitalvet_app/ui/pages/profiles/register_profile.dart';
 
 void main() {
   runApp(const MyApp());
