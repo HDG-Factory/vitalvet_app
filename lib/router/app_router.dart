@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vitalvet_app/ui/pages/medical_attentions/register_medical_attentions.dart';
+import 'package:vitalvet_app/ui/pages/patient_page.dart';
+import 'package:vitalvet_app/ui/pages/profiles/register_profile.dart';
 import 'package:vitalvet_app/ui/pages/welcome_page.dart';
-
-import '../main.dart';
-import '../ui/pages/medical_atttentions/register_medical_attentions.dart';
-import '../ui/pages/patient_page.dart';
-import '../ui/pages/profiles/register_profile.dart';
 
 class AppRouter {
   MaterialPageRoute? generateRoute(RouteSettings settings) {
